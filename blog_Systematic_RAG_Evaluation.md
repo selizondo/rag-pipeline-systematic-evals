@@ -1,16 +1,14 @@
 # Systematic RAG Evaluation: What Actually Matters When You Measure It
 
-Most RAG pipelines are built with defaults. Chunk size 512, `text-embedding-3-small`, cosine similarity, done. That works — until it doesn't, and you don't know why, and you don't have the data to fix it.
+Most RAG pipelines are built with defaults. Chunk size 512, `text-embedding-3-small`, cosine similarity, done. The community even has a reference configuration: `fixed_256 + small + vector`. On this document, it ranked 11th out of 24.
 
-This post documents a systematic evaluation of 24 RAG configurations on a real document. The goal is to replace intuition with measurement and give you a practical framework for choosing your own configuration. The surprise: the configuration the community consensus says should win didn't — and the reason tells you something important about how chunk strategy and document type interact.
+This post documents 24 RAG configurations evaluated on a real document — a 119-page government statistical yearbook, not a curated benchmark designed to flatter your defaults. The configuration that wins is counterintuitive. More importantly, *why* it wins tells you when your defaults will fail.
+
+One thing to take away: a decision framework for chunk strategy, embedding model, and retrieval method based on document type — not community consensus.
 
 ---
 
-## What Is RAG and Why Does Configuration Matter?
-
-**Retrieval-Augmented Generation (RAG)** connects a language model to an external knowledge base. Instead of relying on what the model memorized during training, you retrieve relevant document chunks at query time and pass them to the LLM as context. This lets you answer questions from proprietary or frequently-updated documents without retraining.
-
-The pipeline has three moving parts that each introduce a hyperparameter:
+## The Configuration Gap
 
 ```
 PDF
@@ -20,7 +18,9 @@ PDF
              └─ LLM (gets retrieved chunks as context)
 ```
 
-The difference between a 60% MRR and a 96% MRR is the difference between a frustrating assistant that misses context and one that consistently surfaces the right chunk in the top result. The configuration choices — not the LLM — drive that gap. Most teams never measure it.
+Each stage is a hyperparameter. The gap between worst and best configuration in this experiment is MRR = 0.322 vs MRR = 0.928 — the difference between missing 7 out of 10 relevant chunks and missing fewer than 1 in 14. When the LLM gives wrong answers, configuration gets blamed last. It should be tested first.
+
+Most teams ship a configuration in the bottom third. Not because it's hard to do better — because they never measured.
 
 ---
 
@@ -220,7 +220,7 @@ This matters for evaluation integrity. If questions are paraphrased excerpts con
 
 ### Finding 1: Semantic Chunking Won — Against the Reference Prediction
 
-The community baseline (and the reference implementation for this project) predicts `fixed_256 + small + vector` as the best configuration (MRR = 0.963). On `fy10syb.pdf`, the same configuration scores MRR = 0.507 — near the bottom of the leaderboard.
+The community baseline — and the reference implementation for this project — predicts `fixed_256 + small + vector` as the best configuration (MRR = 0.963 on synthetic benchmarks). On `fy10syb.pdf`, the same configuration scores MRR = 0.507. That's 11th place. The configuration ranked 1st on someone else's document ranked near last on this one.
 
 ![Chunking Strategy Comparison](visualizations/chunking_comparison.png)
 
@@ -258,9 +258,9 @@ BM25's best result is on sentence-based chunks (MRR = 0.635). Sentence boundarie
 
 ---
 
-### Finding 3: Hybrid Retrieval Needs Alpha Tuning
+### Finding 3: Hybrid Retrieval Underperformed — Because Equal Weighting Assumes BM25 Is Half as Useful as Dense
 
-Hybrid retrieval (equal weight α = 0.5) consistently scores below pure vector. This surprises people — *combining two signals should improve results, right?*
+Hybrid retrieval at α = 0.5 consistently scores below pure vector. *Combining two signals should improve results, right?*
 
 Not when one signal is weak. The `HybridRetriever` correctly normalizes BM25 and cosine scores to [0, 1] before combining. The problem is that giving BM25 50% weight drags down the combined score when BM25 quality is poor on paraphrase-style questions. The optimal alpha for this document is closer to 0.8–0.9 (vector-dominant), not 0.5.
 
