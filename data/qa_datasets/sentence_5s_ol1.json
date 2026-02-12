@@ -1,0 +1,330 @@
+{
+  "chunk_config_label": "sentence_5s_ol1",
+  "pairs": [
+    {
+      "question": "Who is responsible for managing visa petition appeals that fall under the jurisdiction of the Board of Immigration Appeals?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "d7f630b2-123c-49cb-9d6f-e4bdc7152ecc"
+      ],
+      "metadata": {
+        "source_chunk_index": 163,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is the primary role of the immigration judge in Continued Detention Review cases involving aliens who have been ordered removed?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "5914bdc5-80ac-413d-b76e-da71061a002c"
+      ],
+      "metadata": {
+        "source_chunk_index": 28,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What was the overall grant rate for asylum applications in fiscal year 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "930a8c2b-edf3-42b0-87c4-845ee8481509"
+      ],
+      "metadata": {
+        "source_chunk_index": 6,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What criteria must an alien meet for an immigration judge to allow voluntary departure for up to 60 days?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "ea84f458-7e0f-4938-8f69-ff5a78060d67"
+      ],
+      "metadata": {
+        "source_chunk_index": 70,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What information does Tab M provide regarding certain aliens and their protection?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "554fd934-8415-4305-9ffa-f525702d24a7"
+      ],
+      "metadata": {
+        "source_chunk_index": 62,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is the time frame for an asylum application to be adjudicated according to the IIRIRA, and how does this affect the applicant's ability to obtain employment authorization?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "6c670998-2b2a-4d9e-972c-0b785523f4e7"
+      ],
+      "metadata": {
+        "source_chunk_index": 57,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which five languages accounted for 90 percent of immigration court proceedings completed in FY 2006?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "d4d9d799-87d3-40bc-97ed-2d7cb9477e96"
+      ],
+      "metadata": {
+        "source_chunk_index": 35,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What options does an alien have if they claim U.S. citizenship but DHS finds no basis for that claim?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "9be26331-aa88-4707-835f-5209c889d289"
+      ],
+      "metadata": {
+        "source_chunk_index": 26,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What role does the Court Administrator play in the management of an immigration court?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "ff92948b-01c5-4f9f-8779-06cffd816a4d"
+      ],
+      "metadata": {
+        "source_chunk_index": 139,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What are the main differences between exclusion proceedings and deportation cases as described in the text?",
+      "question_type": "comparative",
+      "relevant_chunk_ids": [
+        "00f09f3e-745b-48cd-bc61-a39cf308ce86"
+      ],
+      "metadata": {
+        "source_chunk_index": 22,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What options are available for an alien who disagrees with an asylum officer's determination regarding their fear of persecution or torture?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "a886221d-459d-4c0d-bb8d-f5a2600cce36"
+      ],
+      "metadata": {
+        "source_chunk_index": 151,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is the process for a respondent to challenge the bond amount set by the Department of Homeland Security?",
+      "question_type": "analytical",
+      "relevant_chunk_ids": [
+        "9849749c-b599-4b4f-91c6-d20f4efd4f7a"
+      ],
+      "metadata": {
+        "source_chunk_index": 108,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "How have the numbers of appeals to the Board of Immigration Appeals changed from FY 2009 to FY 2010 compared to appeals from Immigration Judges?",
+      "question_type": "comparative",
+      "relevant_chunk_ids": [
+        "3454a9c9-75d2-4157-a691-e1514fbbecae"
+      ],
+      "metadata": {
+        "source_chunk_index": 8,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What percentage of immigration court proceedings in FY 2010 involved applications for relief?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "9ddb5493-731e-4e69-9904-84ce2321c572"
+      ],
+      "metadata": {
+        "source_chunk_index": 7,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What must happen if an arriving alien expresses a fear of returning home during expedited removal proceedings?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "1e7ded46-fd50-4488-9f5f-c4f9c5e35e73"
+      ],
+      "metadata": {
+        "source_chunk_index": 23,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What trend can be observed in the asylum or withholding of removal grant rate from FY 2006 to FY 2010?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "b1f99a7d-433b-42b0-bcbd-d58610121e7f"
+      ],
+      "metadata": {
+        "source_chunk_index": 55,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What are the two types of protections available to aliens who might face torture if removed from the United States under the 1999 regulations?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "2f034b54-3eec-453d-b0a2-ea09b9baa169"
+      ],
+      "metadata": {
+        "source_chunk_index": 59,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What steps could the INS District Director take regarding an inadmissible applicant before April 1, 1997?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "8cd89325-0054-4ca4-bb22-43bb82b3ae6b"
+      ],
+      "metadata": {
+        "source_chunk_index": 129,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What criteria must an alien meet to be eligible for withholding of removal according to the Immigration and Nationality Act?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "b274cca8-8dbc-4fcb-b7aa-c4de1cbf866b"
+      ],
+      "metadata": {
+        "source_chunk_index": 166,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is the purpose of the Institutional Hearing Program established by the Department of Justice?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "e3291406-3398-4633-82c8-7220d01e48ce"
+      ],
+      "metadata": {
+        "source_chunk_index": 143,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What additional circumstances can lead to a case being classified as an 'other' asylum completion?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "58dd0f70-91c1-4228-ad80-ee1cd48cad99"
+      ],
+      "metadata": {
+        "source_chunk_index": 50,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What qualifications did an alien need to meet in order to apply for Suspension of Deportation?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "2b95a0e9-d64f-4e72-8740-19df443e2024"
+      ],
+      "metadata": {
+        "source_chunk_index": 160,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is the role of the Board of Immigration Appeals in relation to immigration laws and decisions?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "a78909c8-aa4f-4491-8a1d-c9318df2fc61"
+      ],
+      "metadata": {
+        "source_chunk_index": 107,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What are the two methods through which individuals can apply for asylum according to the regulations mentioned?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "363376cd-b26f-406a-aff3-96fcea1019c6"
+      ],
+      "metadata": {
+        "source_chunk_index": 56,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What changes regarding refugee admission criteria were made by the Illegal Immigration Reform and Immigrant Responsibility Act of 1996?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "cb7aa2d4-8ef6-49d6-91aa-af3b8ccab54a"
+      ],
+      "metadata": {
+        "source_chunk_index": 114,
+        "source_page": null,
+        "chunk_method": "sentence",
+        "synthetic": true
+      }
+    }
+  ]
+}

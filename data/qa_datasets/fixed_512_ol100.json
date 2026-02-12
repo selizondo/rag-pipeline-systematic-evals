@@ -1,0 +1,330 @@
+{
+  "chunk_config_label": "fixed_512_ol100",
+  "pairs": [
+    {
+      "question": "What role does an immigration judge play in the immigration court system?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "5df4a641-cfb4-447c-a927-3eeb3ca2c3c2"
+      ],
+      "metadata": {
+        "source_chunk_index": 327,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which city in Texas reported a total of 3,246 individuals?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "23b827dd-4d4f-45b9-b9dc-581b228374c2"
+      ],
+      "metadata": {
+        "source_chunk_index": 57,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What types of data are summarized in the tables related to immigration court proceedings for fiscal years 2006 to 2010?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "8595f214-ab19-4c15-b27b-299165fc8a73"
+      ],
+      "metadata": {
+        "source_chunk_index": 12,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which country has the highest number of recorded instances according to the provided data?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "7d078fc2-3b96-4e0d-96be-40069664d7b4"
+      ],
+      "metadata": {
+        "source_chunk_index": 379,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What options do asylum seekers have regarding removal once they are granted protection?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "ee5d1e6e-1ca3-4ed1-aa7a-ed5766749ad4"
+      ],
+      "metadata": {
+        "source_chunk_index": 140,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which country consistently ranked first in asylum grants from FY 2006 to FY 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "40f2d2ad-3799-4593-8be4-77e5a7d17daf"
+      ],
+      "metadata": {
+        "source_chunk_index": 125,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What was the percentage decline in asylum receipts and completions from fiscal year 2006 to fiscal year 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "9cd8c25e-e13c-4afd-8552-8f15a53d0566"
+      ],
+      "metadata": {
+        "source_chunk_index": 114,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What type of case is initiated when someone seeking asylum is ineligible for admission to the United States?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "c4b79657-a107-43ce-8155-c3d8d42ccbdc"
+      ],
+      "metadata": {
+        "source_chunk_index": 71,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which country listed has the highest count of occurrences recorded?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "2628db3b-6a3e-4437-9db8-25dadce1332b"
+      ],
+      "metadata": {
+        "source_chunk_index": 377,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which location experienced the largest percentage decrease in numbers according to the data provided?",
+      "question_type": "comparative",
+      "relevant_chunk_ids": [
+        "b17d74f5-11f2-432f-b81a-d3e080243ccc"
+      ],
+      "metadata": {
+        "source_chunk_index": 52,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What does the term 'pro bono' mean in the context of legal representation?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "035fbcb4-e773-4cc3-972b-870e59761105"
+      ],
+      "metadata": {
+        "source_chunk_index": 346,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which country has the highest recorded value in the data provided?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "cd2a6cbe-61fb-421c-9b4b-fc08a333bdf6"
+      ],
+      "metadata": {
+        "source_chunk_index": 456,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What authority does an immigration judge have during a bond redetermination hearing regarding the bond amount?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "2f310c2a-958c-4a18-bf5d-a3548c8f1e66"
+      ],
+      "metadata": {
+        "source_chunk_index": 279,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which city has the highest total number of recorded incidents according to the data provided?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "b00c81e5-6e3a-4f82-b2b1-ac66c1c31c26"
+      ],
+      "metadata": {
+        "source_chunk_index": 44,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What distinguishes deferral of removal from withholding of removal in terms of termination processes?",
+      "question_type": "comparative",
+      "relevant_chunk_ids": [
+        "226ddb04-0a2a-41c9-8222-8c5e041e96d4"
+      ],
+      "metadata": {
+        "source_chunk_index": 302,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What trend can be observed in the total number of appeals from FY 2006 to FY 2010?",
+      "question_type": "analytical",
+      "relevant_chunk_ids": [
+        "7fd01204-9a69-465b-a9e5-06252a33ec02"
+      ],
+      "metadata": {
+        "source_chunk_index": 216,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What percentage of aliens had representation during their immigration court cases in FY 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "6dc4cd8b-b4cb-49de-bb57-44fbfaa7bb85"
+      ],
+      "metadata": {
+        "source_chunk_index": 16,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which countries had the highest number of immigration court completions in FY 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "15e28b0c-d723-47d0-a247-c3fc2be48e90"
+      ],
+      "metadata": {
+        "source_chunk_index": 15,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which immigration court in FY 2010 saw an increase in matters completed compared to FY 2009?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "669876b8-8ea0-4f7d-864f-900c1ba2fd0d"
+      ],
+      "metadata": {
+        "source_chunk_index": 47,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What criteria must an alien meet to be eligible for asylum in the United States?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "bb0e3f9f-6bd7-45ca-a3a2-d8c5a5b960bf"
+      ],
+      "metadata": {
+        "source_chunk_index": 111,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which city has the highest number of recorded data points mentioned in the chunk?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "53b10394-1345-4e0a-8397-df6806256482"
+      ],
+      "metadata": {
+        "source_chunk_index": 119,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What criteria must be met for an alien to have their status adjusted to lawful permanent resident?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "97ccd077-19ff-4318-8a21-d1936d41b99b"
+      ],
+      "metadata": {
+        "source_chunk_index": 258,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What are the types of facilities where immigration court hearings for detained aliens take place?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "000c4197-e054-4905-ab1a-7a0c10cebc4d"
+      ],
+      "metadata": {
+        "source_chunk_index": 308,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What does Table 7 present regarding asylum grants over a specific fiscal period?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "9025da82-ff7e-479e-89a5-23f8476c7471"
+      ],
+      "metadata": {
+        "source_chunk_index": 13,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What recourse does an alien have if they falsely claim to be a U.S. citizen during expedited removal proceedings?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "70a12fa1-5fa2-4260-bf91-f3bf66d86f50"
+      ],
+      "metadata": {
+        "source_chunk_index": 287,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    }
+  ]
+}

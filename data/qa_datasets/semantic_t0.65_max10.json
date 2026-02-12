@@ -1,0 +1,330 @@
+{
+  "chunk_config_label": "semantic_t0.65_max10",
+  "pairs": [
+    {
+      "question": "Under what circumstances might an immigration judge allow an alien to leave the United States voluntarily?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "ad84b17c-f0aa-4551-9cd0-218c8c9772f5"
+      ],
+      "metadata": {
+        "source_chunk_index": 114,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is represented in Figures 16, 17, and 18 located on pages K1 and K2?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "e96fad12-b90a-4aab-af9a-ed71cdb04489"
+      ],
+      "metadata": {
+        "source_chunk_index": 25,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Who determines the nature, number of proceedings, and appeals related to immigration court decisions?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "f40048cf-1929-499c-a499-cfe65f60af25"
+      ],
+      "metadata": {
+        "source_chunk_index": 281,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What type of cases primarily occupy the workload of the Board of Immigration Appeals?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "38a80e5c-0423-4db8-8662-0b899bf8f960"
+      ],
+      "metadata": {
+        "source_chunk_index": 250,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is Adjustment of Status and who qualifies for it?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "454c55f3-63f1-4562-8e89-cf50dc7021f5"
+      ],
+      "metadata": {
+        "source_chunk_index": 228,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What percentage of immigration judge decisions in FY 2010 were related to aliens who did not show up for their hearings?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "40590668-17d7-435e-94d5-9ed7c0fab66c"
+      ],
+      "metadata": {
+        "source_chunk_index": 142,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What factors lead to the conclusion that an alien may have a reasonable fear of persecution or torture upon return to their country of removal?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "98697a83-7ca0-4acc-8839-ac372e09c7ed"
+      ],
+      "metadata": {
+        "source_chunk_index": 104,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What happens to the alien if the judge finds there is a reasonable fear?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "5f50466c-899d-4742-848c-d82aa3220cb6"
+      ],
+      "metadata": {
+        "source_chunk_index": 89,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What role does a Court Administrator play in an immigration court?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "21df27f2-c155-45dd-a0d6-22dadb2bfd11"
+      ],
+      "metadata": {
+        "source_chunk_index": 432,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "How many years in a row has the number of appeals to the BIA from IJ Decisions decreased?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "0e299c93-ff07-448e-a881-9d6f06eeb300"
+      ],
+      "metadata": {
+        "source_chunk_index": 32,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What percentage of immigration court completions in FY 2010 were related to detained individuals?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "f476becb-85e5-4566-9d5c-7574fd60fed6"
+      ],
+      "metadata": {
+        "source_chunk_index": 30,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is one type of proceeding mentioned in the text?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "3aeaa40a-2495-41ae-9286-8b3c56c812a9"
+      ],
+      "metadata": {
+        "source_chunk_index": 95,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is the purpose of Tabs I-L and Tab M in the document?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "2ad24475-8374-4715-b654-f36e58ff1f88"
+      ],
+      "metadata": {
+        "source_chunk_index": 223,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Under what conditions are applicants for cancellation of removal exempt from the cap?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "cd08a3e4-8d25-4a57-affc-c6af09b6f034"
+      ],
+      "metadata": {
+        "source_chunk_index": 238,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What sections are referenced in the text?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "d94d892a-5d6a-48e2-b688-6ee252ba07c2"
+      ],
+      "metadata": {
+        "source_chunk_index": 517,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What does Figure 19-B illustrate on page K5?",
+      "question_type": "conceptual",
+      "relevant_chunk_ids": [
+        "038c4b2c-a455-463b-b26a-235ac56a8836"
+      ],
+      "metadata": {
+        "source_chunk_index": 27,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What are the different types of facilities where detention can occur?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "7325858f-75b0-4520-aeda-08f2d0042bb7"
+      ],
+      "metadata": {
+        "source_chunk_index": 203,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What were the primary responsibilities of the Immigration and Naturalization Service prior to its transition to the Department of Homeland Security?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "d73ee93d-d315-4bd9-9dab-343ce854d0c4"
+      ],
+      "metadata": {
+        "source_chunk_index": 429,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What new relief was introduced by the Illegal Immigration Reform and Immigrant Responsibility Act of 1996?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "162a9949-8162-4c5d-9ebf-7b51150e1482"
+      ],
+      "metadata": {
+        "source_chunk_index": 225,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What topic is referenced in the text that relates to legal processes involving the annulment of agreements?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "dfd98a0b-7a48-414e-8963-8b3cd8f6f3ac"
+      ],
+      "metadata": {
+        "source_chunk_index": 459,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What trend has been observed regarding the age of pending cases?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "ccbd7b14-a271-4068-b86f-702eac0f5fea"
+      ],
+      "metadata": {
+        "source_chunk_index": 284,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "By what percentage did the number of immigration court receipts rise from FY 2006 to FY 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "3d3cfd0e-f90f-4d9a-8935-83858777ac3e"
+      ],
+      "metadata": {
+        "source_chunk_index": 6,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What types of outcomes does EOIR record for asylum cases?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "39d3e031-517e-4a3f-ad07-474fef784882"
+      ],
+      "metadata": {
+        "source_chunk_index": 163,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What conditions must be met for an immigration judge to change the venue of a proceeding?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "5ac7b87c-0de1-414a-9b7e-03ba7291fec2"
+      ],
+      "metadata": {
+        "source_chunk_index": 348,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which nationality had the highest percentage of asylum grants in FY 2010 according to the statistics?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "c74fad51-a7bc-4d17-9809-0c5bd92e7638"
+      ],
+      "metadata": {
+        "source_chunk_index": 159,
+        "source_page": null,
+        "chunk_method": "semantic",
+        "synthetic": true
+      }
+    }
+  ]
+}

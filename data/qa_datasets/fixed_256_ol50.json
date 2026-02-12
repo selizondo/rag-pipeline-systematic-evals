@@ -1,0 +1,330 @@
+{
+  "chunk_config_label": "fixed_256_ol50",
+  "pairs": [
+    {
+      "question": "What is the role of immigration judges in immigration courts?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "c723d26c-66b3-4d51-a099-5fc11e905f54"
+      ],
+      "metadata": {
+        "source_chunk_index": 654,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which city has the highest total of numbers listed in the chunk?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "796b52c9-7260-4070-9226-eae69ef2f3c1"
+      ],
+      "metadata": {
+        "source_chunk_index": 114,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What information is provided in Table 5 regarding court proceedings?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "35d9db83-679f-4bc0-bc0c-981617db1e68"
+      ],
+      "metadata": {
+        "source_chunk_index": 25,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "How many total entries are listed for Cuba in the provided data?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "84aef503-5a75-4ef7-a529-9435095c6f60"
+      ],
+      "metadata": {
+        "source_chunk_index": 759,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What conditions must be met for individuals facing persecution to be sent to a third country?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "e509cb04-b868-4d8b-9216-af66f6806be9"
+      ],
+      "metadata": {
+        "source_chunk_index": 281,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which nationality consistently ranked first for asylum grants from FY 2006 to FY 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "4f0481f0-341d-45e3-bcce-68f63c025920"
+      ],
+      "metadata": {
+        "source_chunk_index": 250,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What was the percentage decline in asylum receipts as indicated in the report?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "ab283a0b-09dc-4985-8c42-c5f693e5e542"
+      ],
+      "metadata": {
+        "source_chunk_index": 228,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What circumstances prompt the initiation of an asylum only case for individuals arriving in the United States?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "1c0113c8-d751-4cd9-926f-fcc0eddcd44a"
+      ],
+      "metadata": {
+        "source_chunk_index": 142,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which country has the highest numerical value in the list provided?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "a2410e33-e7e5-4a3b-b8d9-0e3054b50b6c"
+      ],
+      "metadata": {
+        "source_chunk_index": 754,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "How did the population of San Diego change compared to the previous figure?",
+      "question_type": "comparative",
+      "relevant_chunk_ids": [
+        "7295a341-ebdb-4074-bf70-a452c2639995"
+      ],
+      "metadata": {
+        "source_chunk_index": 104,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What does the term 'Pro Bono' mean in legal contexts?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "607228bc-fbbe-4dad-b7cf-9631c7f477e7"
+      ],
+      "metadata": {
+        "source_chunk_index": 692,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which country has the highest number of entries in the provided statistics?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "a2a1e6d7-7fca-4158-9a13-57c16a9bf024"
+      ],
+      "metadata": {
+        "source_chunk_index": 758,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which country listed has the highest total count in the data presented?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "5df596c0-cc8f-443c-8ca9-bdac5631a2d2"
+      ],
+      "metadata": {
+        "source_chunk_index": 913,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What actions can an immigration judge take during a bond redetermination hearing?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "9bdd343e-5c62-49b6-957c-ef17a76b80fc"
+      ],
+      "metadata": {
+        "source_chunk_index": 558,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which city in California had the highest number of individuals listed?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "de69324a-f058-4e3e-8423-68bfae80d232"
+      ],
+      "metadata": {
+        "source_chunk_index": 89,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What distinguishes deferral of removal from withholding of removal in terms of termination processes?",
+      "question_type": "comparative",
+      "relevant_chunk_ids": [
+        "03d606b1-08f9-4209-ab5a-f21f32be3bf9"
+      ],
+      "metadata": {
+        "source_chunk_index": 604,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "How many total appeals were recorded in fiscal year 2006?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "c5036d6c-3960-4ca5-a5f9-acd5beaefa10"
+      ],
+      "metadata": {
+        "source_chunk_index": 432,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which nationality was the most common among immigration court completions in FY 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "274046f9-5067-4b5f-b932-e4f7c8b62ae0"
+      ],
+      "metadata": {
+        "source_chunk_index": 32,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "How did the number of immigration court receipts change from FY 2006 to FY 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "587b006a-f6be-4039-bb65-f136a9649682"
+      ],
+      "metadata": {
+        "source_chunk_index": 30,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "How did the total number of Immigration Court matters in Arlington, Virginia change from FY 2009 to FY 2010?",
+      "question_type": "analytical",
+      "relevant_chunk_ids": [
+        "80f16505-90fb-4df8-855d-518cee63afca"
+      ],
+      "metadata": {
+        "source_chunk_index": 95,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What criteria must an individual meet to qualify for asylum based on their experiences of persecution?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "8aea99ae-d828-4e8c-9d17-58e23e8ad1c8"
+      ],
+      "metadata": {
+        "source_chunk_index": 223,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Which city listed has the highest number in the second column?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "145b5175-a705-4c0b-8abe-5571d225f637"
+      ],
+      "metadata": {
+        "source_chunk_index": 238,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "Under what conditions can an alien's status change to lawful permanent resident according to this text?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "1cf00e64-d1ea-4b0a-a584-c6cd7afe5e6e"
+      ],
+      "metadata": {
+        "source_chunk_index": 517,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What is the definition of detained aliens as described in the Year Book?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "aa1f5af2-7375-492f-a10f-8cf76ba5850f"
+      ],
+      "metadata": {
+        "source_chunk_index": 616,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    },
+    {
+      "question": "What types of court completions are detailed in the tables for FY 2010?",
+      "question_type": "factual",
+      "relevant_chunk_ids": [
+        "6031e86f-60cf-44f6-87e4-a1ca95e40027"
+      ],
+      "metadata": {
+        "source_chunk_index": 27,
+        "source_page": null,
+        "chunk_method": "fixed_size",
+        "synthetic": true
+      }
+    }
+  ]
+}
