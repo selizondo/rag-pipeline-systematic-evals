@@ -5,6 +5,30 @@ See [rag_pipeline_systematic_evals.md](rag_pipeline_systematic_evals.md) for the
 
 ---
 
+## Objective
+
+**Problem:** RAG systems have dozens of design decisions (chunk size, overlap, embedding model, retrieval method) that each affect quality in non-obvious ways. Most teams pick defaults and never measure the impact.
+
+**Solution:** A systematic evaluation framework that runs a full combinatorial grid search over chunking × embedding × retrieval configurations on a single PDF, identifies the optimal setup, and produces evidence-backed recommendations.
+
+**Core challenge:** Fair comparison requires generating synthetic QA datasets *per chunking configuration* (not shared across configs) — otherwise the question-chunk alignment differs between strategies and the comparison is invalid.
+
+**Three pipeline phases:**
+
+| Phase | Steps |
+|---|---|
+| **Ingest** | PDF → parse (pdfplumber) → chunk (4 strategies) → embed (2 models) → FAISS index |
+| **QA Generate** | Chunks → LLM → synthetic QA pairs with ground-truth chunk IDs (per chunking config) |
+| **Evaluate** | Questions → retrieval (BM25 / vector / hybrid) → IR metrics (MRR, MAP, Recall@K, Precision@K, NDCG@K) |
+
+**Grid search space:** 4 chunking configs × 2 embedding models × 3 retrieval methods = **24 experiments**
+
+**Document:** `data/fy10syb.pdf` (FY2010 US federal budget summary, ~552KB, dense statistical government text)
+
+**Key result:** Semantic chunking + `text-embedding-3-large` + vector retrieval wins (MRR=0.928, Recall@5=1.0). Fixed-size chunking and BM25 retrieval both underperform on dense narrative text.
+
+---
+
 ## Setup
 
 ```bash
