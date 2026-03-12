@@ -98,12 +98,20 @@ def run_grid_search(
             continue
 
         chunk_label = config.chunk.label()
+        # Semantic chunk boundaries are determined by embed_fn similarity scores,
+        # so they differ per embedding model. Use a compound key for semantic strategy
+        # to avoid reusing small-model boundaries for large-model experiments.
+        cache_key = (
+            f"{chunk_label}__{config.embed.label()}"
+            if config.chunk.strategy == ChunkStrategy.SEMANTIC
+            else chunk_label
+        )
 
-        if chunk_label not in seen_chunk_labels:
-            seen_chunk_labels[chunk_label] = _chunk_document(
+        if cache_key not in seen_chunk_labels:
+            seen_chunk_labels[cache_key] = _chunk_document(
                 full_text, config.chunk, config.embed
             )
-        chunks = seen_chunk_labels[chunk_label]
+        chunks = seen_chunk_labels[cache_key]
 
         dataset = generate_qa_dataset(
             chunks,

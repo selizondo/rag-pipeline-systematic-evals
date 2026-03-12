@@ -50,7 +50,7 @@ def generate_all_charts(
     output_dir: Path = Path("visualizations"),
 ) -> dict[str, Path]:
     """
-    Generate all 6 visualisation charts from a list of EvaluationResult objects.
+    Generate all 9 visualisation charts from a list of EvaluationResult objects.
 
     Returns dict mapping chart name → saved Path.
     """
