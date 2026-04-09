@@ -232,7 +232,11 @@ rag_pipeline_systematic_evals/
 
 **Execution order minimises work** — the grid iterates chunk → embed → retrieval: PDF is parsed once, chunking runs 4×, embedding runs 8×, retrieval/eval runs 24×.
 
+**Blog post:** [blog_Systematic_RAG_Evaluation.md](blog_Systematic_RAG_Evaluation.md) — companion write-up covering the per-config QA generation insight, the fixed-size vs semantic chunking tradeoff, and the full results table.
+
 **MRR ≈ MAP** — with 1:1 ground truth (one relevant chunk per question), Average Precision equals Reciprocal Rank, so MAP = MRR exactly. Focus on MRR and Recall@K for comparisons.
+
+**fixed_256 MRR gap vs spec reference.** The spec document references `fixed_256` as a baseline with MRR ≈ 0.963. This implementation achieves MRR = 0.507 for `fixed_256_ol50__small__vector`. The gap (47%) likely reflects a difference in source PDF, QA generation prompt, or overlap parameter between the spec author's run and this implementation. The relative comparisons across all 24 configs remain valid; the absolute values are PDF- and prompt-dependent. See `docs/failures.md` for the open investigation.
 
 ---
 
