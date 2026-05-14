@@ -24,6 +24,14 @@ With exactly one ground-truth chunk per query, `Precision@K` is capped at `1/K` 
 
 The spec document uses `fixed_256` as a "before optimization" baseline with reported MRR=0.963. The actual P3 result for `fixed_256_ol50__small__vector` is MRR=0.507. The gap has not been investigated but likely reflects a difference in PDF, QA generation prompt, or overlap parameter between the spec author's run and this implementation. This is documented as an open item — not a silent discrepancy.
 
+## QA dataset cache invalidation strategy
+
+Each chunking config's QA dataset is cached to `data/qa_datasets/{chunk_config_label}.json`. The cache key is the `chunk_config_label` string (e.g. `fixed_256_ol50`). On load, the cached dataset is validated: all chunk UUIDs referenced by cached QA pairs must exist in the current chunk set. If any UUID is missing — which happens when the chunking parameters change and chunks are re-generated with new UUIDs — the cache is silently discarded and the QA dataset is regenerated.
+
+**What invalidates the cache:** changing any parameter that affects chunk boundaries (chunk_size, overlap, breakpoint_threshold, max_sentences, sentences_per_chunk). These produce new chunk UUIDs, which fail the subset check.
+
+**What does NOT invalidate the cache:** changing the QA generation prompt or model. If `_SYSTEM_PROMPT` in `qa_generator.py` is updated to produce different question styles, the cached dataset is returned unchanged because the chunk UUIDs still match. To force regeneration after a prompt change, delete the relevant file in `data/qa_datasets/` or run with `--force` (which bypasses the experiment-level cache but not the QA cache — delete QA files manually). This is a known limitation documented in `docs/failures.md`.
+
 ## Resume/skip logic based on experiment_id file existence
 
 A completed experiment writes its result to `experiments/{experiment_id}.json`. On re-run, if that file exists the cell is skipped. This means changing any config parameter changes the experiment_id and forces a fresh run even if only an unrelated parameter changed. The alternative — content-addressed caching — requires hashing the full config, which is harder to inspect and debug. File-existence skipping is transparent: you can see exactly which cells have results.

@@ -17,6 +17,7 @@ MRR and Recall@K as primary quality signals, not Precision@K.
 from __future__ import annotations
 
 import time
+from datetime import datetime, timezone
 
 from rag_common import metrics
 from rag_common.retrievers import RetrieverProtocol
@@ -90,6 +91,7 @@ def evaluate(
         config        = config,
         metrics       = metrics_result,
         query_results = per_query_detail,
+        generated_at  = datetime.now(timezone.utc).isoformat(),
     )
 
 

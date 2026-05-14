@@ -15,6 +15,7 @@ EvaluationResult written to experiments/.
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Literal
@@ -111,6 +112,10 @@ class RetrievalConfig(BaseModel):
     method: RetrievalMethod = RetrievalMethod.VECTOR
     top_k: int              = 5
     # Hybrid-only: weight for dense scores; (1 - alpha) for BM25.
+    # α=0.5 is a neutral starting point (equal weight). It was not empirically tuned
+    # for this document — see README "Hybrid α=0.5 analysis" and docs/tradeoffs.md.
+    # On dense financial PDFs, BM25 adds noise; α closer to 1.0 would recover
+    # pure-vector performance. Tune per document type.
     alpha: float            = 0.5
 
     def label(self) -> str:
@@ -167,6 +172,11 @@ class EvaluationResult(BaseModel):
     metrics:        MetricsResult
     # Per-query detail kept for debugging and future LLM-as-Judge scoring.
     query_results:  list[dict] = Field(default_factory=list)
+    # Run metadata — populated on new runs; absent in results committed before 2026-05-20.
+    generated_at: str = Field(
+        default="",
+        description="ISO-8601 UTC timestamp when this experiment was evaluated.",
+    )
 
 
 # ---------------------------------------------------------------------------

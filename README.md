@@ -62,6 +62,8 @@ Top 8 configs (25 queries, FY2010 federal budget PDF):
 
 **Key finding:** Semantic chunking + vector retrieval dominates. BM25 underperforms on this document type (dense budget tables, few keyword anchors). Hybrid adds no benefit over pure vector when the document has low lexical distinctiveness.
 
+**Hybrid α=0.5 analysis:** All 8 hybrid configs use α=0.5 (equal weight dense/BM25). Compared to their pure-vector counterparts, hybrid consistently underperforms: semantic+large drops from 0.928 → 0.778 (−16%), semantic+small 0.910 → 0.771 (−15%), fixed_256+large 0.492 → 0.402 (−18%). The only case where hybrid edges vector is sentence+large (0.791 vs 0.761, +4%). Conclusion: on a dense financial PDF with few keyword anchors, BM25 adds noise rather than signal at α=0.5. A document with high lexical diversity (e.g., API reference docs, support tickets) would likely reverse this. See [docs/tradeoffs.md](docs/tradeoffs.md) for the α=0.5 rationale.
+
 See [docs/failures.md](docs/failures.md) for the `fixed_256` MRR gap vs. spec reference (0.507 actual vs. 0.963 reference — likely PDF or prompt difference, documented as open investigation).
 
 ---
