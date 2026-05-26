@@ -31,10 +31,13 @@ and skipped — the pipeline never crashes on a bad LLM response.
 from __future__ import annotations
 
 import json
+import logging
 import random
 import time
 from pathlib import Path
 from typing import Literal
+
+logger = logging.getLogger(__name__)
 
 import instructor
 from openai import OpenAI
@@ -223,7 +226,7 @@ def _generate_one(
             },
         )
     except Exception as exc:
-        print(f"  [qa_generator] skipping chunk {chunk.chunk_index}: {exc}")
+        logger.warning("skipping chunk %d: %s", chunk.chunk_index, exc)
         return None
 
 

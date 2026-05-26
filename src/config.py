@@ -17,10 +17,16 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from enum import Enum
+from importlib.metadata import version, PackageNotFoundError
 from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
+
+try:
+    __version__: str = version("rag-pipeline-systematic-evals")
+except PackageNotFoundError:
+    __version__ = "0.0.0.dev"
 
 
 # ---------------------------------------------------------------------------
