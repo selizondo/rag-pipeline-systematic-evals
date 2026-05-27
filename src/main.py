@@ -127,6 +127,56 @@ def _print_best_summary(best: EvaluationResult) -> None:
     ))
 
 
+def _print_reranking_comparison(
+    base_results: list[EvaluationResult],
+    reranked_results: list[EvaluationResult],
+) -> None:
+    """Side-by-side table: base vs reranked metrics, delta highlighted."""
+    reranked_by_base = {}
+    for r in reranked_results:
+        base_id = r.experiment_id.replace("__reranked", "")
+        reranked_by_base[base_id] = r
+
+    paired = [(r, reranked_by_base[r.experiment_id])
+              for r in base_results if r.experiment_id in reranked_by_base]
+
+    if not paired:
+        console.print("[yellow]No paired base/reranked results found — "
+                      "run with --rerank to generate comparison data.[/]")
+        return
+
+    table = Table(title="Reranking Impact: Base vs Reranked", show_lines=True)
+    table.add_column("Experiment",        width=34)
+    table.add_column("MRR (base)",        justify="right")
+    table.add_column("MRR (reranked)",    justify="right")
+    table.add_column("ΔMRR",             justify="right")
+    table.add_column("R@5 (base)",        justify="right")
+    table.add_column("R@5 (reranked)",    justify="right")
+    table.add_column("ΔR@5",             justify="right")
+
+    for base, reranked in sorted(paired, key=lambda x: x[0].metrics.mrr, reverse=True):
+        delta_mrr = reranked.metrics.mrr - base.metrics.mrr
+        delta_r5  = (reranked.metrics.recall_at_k.get("5", 0)
+                     - base.metrics.recall_at_k.get("5", 0))
+        delta_mrr_str = (f"[green]+{delta_mrr:.4f}[/]" if delta_mrr > 0
+                         else f"[red]{delta_mrr:.4f}[/]" if delta_mrr < 0
+                         else f"{delta_mrr:.4f}")
+        delta_r5_str  = (f"[green]+{delta_r5:.4f}[/]" if delta_r5 > 0
+                         else f"[red]{delta_r5:.4f}[/]" if delta_r5 < 0
+                         else f"{delta_r5:.4f}")
+        table.add_row(
+            base.experiment_id,
+            f"{base.metrics.mrr:.4f}",
+            f"{reranked.metrics.mrr:.4f}",
+            delta_mrr_str,
+            f"{base.metrics.recall_at_k.get('5', 0):.4f}",
+            f"{reranked.metrics.recall_at_k.get('5', 0):.4f}",
+            delta_r5_str,
+        )
+
+    console.print(table)
+
+
 def _print_chart_paths(saved: dict[str, Path]) -> None:
     table = Table(title="Generated Charts", show_header=True)
     table.add_column("Chart",  style="cyan")
@@ -180,6 +230,13 @@ def main(argv: list[str] | None = None) -> int:
 
     best = best_config(results, primary="mrr")
     _print_best_summary(best)
+
+    # --- Reranking comparison ---
+    if args.rerank:
+        _section("Reranking Comparison")
+        base_results = [r for r in results if "__reranked" not in r.experiment_id]
+        reranked_results = [r for r in results if "__reranked" in r.experiment_id]
+        _print_reranking_comparison(base_results, reranked_results)
 
     # --- Charts ---
     if not args.no_charts:
