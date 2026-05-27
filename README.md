@@ -12,7 +12,7 @@ This project builds a grid search framework that runs every combination across a
 
 Three decisions that most RAG evaluation gets wrong — each handled explicitly here:
 
-**1. Config interaction effects are non-linear** — one-at-a-time ablations miss the cross terms. Semantic chunking only wins when paired with a large embedding model; with the small model it trails sentence chunking. A full factorial grid is the minimum evaluation unit. Any fewer cells and you're measuring noise.
+**1. Config interaction effects are non-linear** — one-at-a-time ablations miss the cross terms. The large embedding model wins on semantic chunking (+0.018 MRR) but loses to the small model on sentence chunking (−0.099 MRR). Neither model dominates across all configs — you only see this if you run the full factorial grid. Any fewer cells and you're measuring noise.
 
 **2. Shared QA datasets invalidate comparisons** — reusing the same question set across chunking configs means some configs were "cheating": their chunk boundaries happened to align with how the questions were phrased. Each chunking strategy generates its own QA dataset tied to that config's chunk UUIDs. A question generated against fixed-256 chunks is not reused for semantic chunks.
 
@@ -36,7 +36,7 @@ fixed_256_ol50  fixed_512_ol100  sentence_5s_ol1  semantic_t0.65_max10
 text-embedding-3-small (1536d)   text-embedding-3-large (3072d)
         │
         ▼ Retrieve + Eval (3 methods × 8 = 24 cells)
-vector (FAISS cosine)  bm25 (rank-bm25)  hybrid (α=0.5 RRF)
+vector (FAISS cosine)  bm25 (rank-bm25)  hybrid (α=0.5, linear interpolation + min-max norm)
 → EvaluationResult: MRR, MAP, Recall@K, Precision@K, NDCG@K (K=1,3,5,10)
         │
         ▼
@@ -72,9 +72,9 @@ Top 8 configs (25 queries, FY2010 federal budget PDF):
 
 The best vector config (MRR=0.928) is 2.0× the best BM25 config (MRR=0.635) on this document. All 24 grid configs beat the avg BM25 baseline (0.466), confirming the grid is learning something real and not just measuring noise. The sentence-chunked BM25 is the strongest keyword baseline because sentence boundaries preserve term co-occurrence within chunks.
 
-**Key finding:** Semantic chunking + vector retrieval dominates. BM25 underperforms on this document type (dense budget tables, few keyword anchors). Hybrid adds no benefit over pure vector when the document has low lexical distinctiveness.
+**Key finding:** Semantic chunking + vector retrieval dominates. BM25 underperforms on this document type. Hybrid adds no benefit over pure vector — the root cause is pool contamination, not corpus vocabulary.
 
-**Hybrid α=0.5 analysis:** All 8 hybrid configs use α=0.5 (equal weight dense/BM25). Compared to their pure-vector counterparts, hybrid consistently underperforms: semantic+large drops from 0.928 → 0.778 (−16%), semantic+small 0.910 → 0.771 (−15%), fixed_256+large 0.492 → 0.402 (−18%). The only case where hybrid edges vector is sentence+large (0.791 vs 0.761, +4%). Conclusion: on a dense financial PDF with few keyword anchors, BM25 adds noise rather than signal at α=0.5. A document with high lexical diversity (e.g., API reference docs, support tickets) would likely reverse this. See [docs/tradeoffs.md](docs/tradeoffs.md) for the α=0.5 rationale.
+**Hybrid α=0.5 analysis:** All 8 hybrid configs use α=0.5 (equal weight dense/BM25). Compared to their pure-vector counterparts, hybrid consistently underperforms: semantic+large drops from 0.928 → 0.778 (−16%), semantic+small 0.910 → 0.771 (−15%), fixed_256+large 0.492 → 0.402 (−18%). The only case where hybrid edges vector is sentence+large (0.791 vs 0.761, +4%). The root cause is pool contamination: the introduction chunk concentrates many rare technical terms, scoring 8–14× higher in BM25 than the next candidate. After min-max normalisation this outlier locks at score=1.0, compressing all other BM25 scores toward zero regardless of the α setting. The α weight becomes meaningless in practice. Rank-based fusion (RRF) would eliminate this by discarding raw scores entirely — see [docs/tradeoffs.md](docs/tradeoffs.md) for the full analysis.
 
 See [docs/failures.md](docs/failures.md) for the `fixed_256` MRR gap vs. spec reference (0.507 actual vs. 0.963 reference — likely PDF or prompt difference, documented as open investigation).
 
