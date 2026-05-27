@@ -4,3 +4,4 @@ __pycache__/
 .env
 .DS_Store
 CLAUDE.md
+rag_pipeline_systematic_evals.md
