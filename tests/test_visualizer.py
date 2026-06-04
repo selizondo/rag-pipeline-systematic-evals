@@ -7,18 +7,23 @@ that the DataFrame builder produces the expected columns/values.
 
 from __future__ import annotations
 
-import pytest
-
 from src.config import (
-    ChunkConfig, ChunkStrategy, EmbedConfig, EmbedModel,
-    EvaluationResult, ExperimentConfig, MetricsResult, RetrievalConfig, RetrievalMethod,
+    ChunkConfig,
+    ChunkStrategy,
+    EmbedConfig,
+    EmbedModel,
+    EvaluationResult,
+    ExperimentConfig,
+    MetricsResult,
+    RetrievalConfig,
+    RetrievalMethod,
 )
 from src.visualizer import _results_to_dataframe, generate_all_charts
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_result(
     chunk_strategy: ChunkStrategy = ChunkStrategy.FIXED_SIZE,
@@ -51,22 +56,25 @@ def _mini_grid() -> list[EvaluationResult]:
     results = []
     for chunk in [ChunkStrategy.FIXED_SIZE, ChunkStrategy.SENTENCE]:
         for retrieval, mrr in [
-            (RetrievalMethod.VECTOR,  0.9),
-            (RetrievalMethod.BM25,    0.7),
-            (RetrievalMethod.HYBRID,  0.85),
+            (RetrievalMethod.VECTOR, 0.9),
+            (RetrievalMethod.BM25, 0.7),
+            (RetrievalMethod.HYBRID, 0.85),
         ]:
-            results.append(_make_result(
-                chunk_strategy=chunk,
-                embed_model=EmbedModel.SMALL,
-                retrieval_method=retrieval,
-                mrr=mrr,
-            ))
+            results.append(
+                _make_result(
+                    chunk_strategy=chunk,
+                    embed_model=EmbedModel.SMALL,
+                    retrieval_method=retrieval,
+                    mrr=mrr,
+                )
+            )
     return results
 
 
 # ---------------------------------------------------------------------------
 # _results_to_dataframe
 # ---------------------------------------------------------------------------
+
 
 class TestResultsToDataframe:
     def test_row_count_matches_results(self):
@@ -76,9 +84,17 @@ class TestResultsToDataframe:
 
     def test_expected_columns_present(self):
         df = _results_to_dataframe(_mini_grid())
-        for col in ["experiment_id", "chunk_label", "embed_label",
-                    "retrieval_method", "mrr", "map_score",
-                    "recall@1", "recall@5", "ndcg@5"]:
+        for col in [
+            "experiment_id",
+            "chunk_label",
+            "embed_label",
+            "retrieval_method",
+            "mrr",
+            "map_score",
+            "recall@1",
+            "recall@5",
+            "ndcg@5",
+        ]:
             assert col in df.columns, f"missing column: {col}"
 
     def test_mrr_values_correct(self):
@@ -96,6 +112,7 @@ class TestResultsToDataframe:
 # ---------------------------------------------------------------------------
 # generate_all_charts
 # ---------------------------------------------------------------------------
+
 
 class TestGenerateAllCharts:
     def test_returns_nine_charts(self, tmp_path):
@@ -115,9 +132,15 @@ class TestGenerateAllCharts:
     def test_expected_chart_names(self, tmp_path):
         saved = generate_all_charts(_mini_grid(), output_dir=tmp_path)
         expected = {
-            "mrr_leaderboard", "recall_at_k_curves", "chunking_comparison",
-            "embedding_comparison", "retrieval_comparison", "mrr_heatmap",
-            "recall_precision_scatter", "metric_correlation", "response_time_vs_quality",
+            "mrr_leaderboard",
+            "recall_at_k_curves",
+            "chunking_comparison",
+            "embedding_comparison",
+            "retrieval_comparison",
+            "mrr_heatmap",
+            "recall_precision_scatter",
+            "metric_correlation",
+            "response_time_vs_quality",
         }
         assert set(saved.keys()) == expected
 
@@ -136,5 +159,5 @@ class TestGenerateAllCharts:
             _make_result(embed_model=EmbedModel.LARGE, mrr=0.85),
         ]
         # Should not crash even with 1 retrieval method and 1 chunk strategy.
-        saved = generate_all_charts(results, output_dir=tmp_path)
+        generate_all_charts(results, output_dir=tmp_path)
         assert (tmp_path / "embedding_comparison.png").exists()

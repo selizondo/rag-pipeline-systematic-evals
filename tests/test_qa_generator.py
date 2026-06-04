@@ -7,37 +7,46 @@ All LLM calls are intercepted — no API key or network required.
 from __future__ import annotations
 
 import json
-import tempfile
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from rag_common.models import Chunk
+
 from src.qa_generator import (
-    QADataset, QAPair, QAPairResponse,
-    _generate_one, _load_dataset, _sample_chunks, _save_dataset,
+    QADataset,
+    QAPair,
+    QAPairResponse,
+    _generate_one,
+    _load_dataset,
+    _sample_chunks,
+    _save_dataset,
     generate_qa_dataset,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_chunks(n: int) -> list[Chunk]:
     return [
-        Chunk(content=f"The mitochondria produces ATP. Fact number {i}.", chunk_index=i, method="fixed_size")
+        Chunk(
+            content=f"The mitochondria produces ATP. Fact number {i}.",
+            chunk_index=i,
+            method="fixed_size",
+        )
         for i in range(n)
     ]
 
 
-def _fake_instructor_client(question: str = "What does mitochondria produce?", question_type: str = "factual"):
+def _fake_instructor_client(
+    question: str = "What does mitochondria produce?", question_type: str = "factual"
+):
     """Returns a mock instructor client whose .chat.completions.create returns a fixed QAPairResponse."""
     mock_client = MagicMock()
     mock_client.chat.completions.create.return_value = QAPairResponse(
         question=question,
-        question_type=question_type,
+        question_type=question_type,  # type: ignore[arg-type]
     )
     return mock_client
 
@@ -45,6 +54,7 @@ def _fake_instructor_client(question: str = "What does mitochondria produce?", q
 # ---------------------------------------------------------------------------
 # QAPairResponse validation
 # ---------------------------------------------------------------------------
+
 
 class TestQAPairResponse:
     def test_valid_response(self):
@@ -68,12 +78,13 @@ class TestQAPairResponse:
 # _sample_chunks
 # ---------------------------------------------------------------------------
 
+
 class TestSampleChunks:
     def test_exact_count_no_replacement(self):
         chunks = _make_chunks(10)
         sample = _sample_chunks(chunks, 5, seed=42)
         assert len(sample) == 5
-        assert len(set(c.id_str() for c in sample)) == 5   # no duplicates
+        assert len(set(c.id_str() for c in sample)) == 5  # no duplicates
 
     def test_all_chunks_when_n_equals_len(self):
         chunks = _make_chunks(5)
@@ -101,6 +112,7 @@ class TestSampleChunks:
 # ---------------------------------------------------------------------------
 # _generate_one
 # ---------------------------------------------------------------------------
+
 
 class TestGenerateOne:
     def test_returns_qa_pair(self):
@@ -131,14 +143,21 @@ class TestGenerateOne:
 # _save_dataset / _load_dataset
 # ---------------------------------------------------------------------------
 
+
 class TestPersistence:
     def test_save_and_load_roundtrip(self, tmp_path):
         chunks = _make_chunks(2)
         dataset = QADataset(
             chunk_config_label="fixed_256_ol50",
             pairs=[
-                QAPair(question="Q1?", question_type="factual", relevant_chunk_ids=[chunks[0].id_str()]),
-                QAPair(question="Q2?", question_type="conceptual", relevant_chunk_ids=[chunks[1].id_str()]),
+                QAPair(
+                    question="Q1?", question_type="factual", relevant_chunk_ids=[chunks[0].id_str()]
+                ),
+                QAPair(
+                    question="Q2?",
+                    question_type="conceptual",
+                    relevant_chunk_ids=[chunks[1].id_str()],
+                ),
             ],
         )
         path = tmp_path / "fixed_256_ol50.json"
@@ -167,6 +186,7 @@ class TestPersistence:
 # generate_qa_dataset
 # ---------------------------------------------------------------------------
 
+
 class TestGenerateQADataset:
     def _patched_generate(self, monkeypatch, chunks, n_pairs, tmp_path):
         """Run generate_qa_dataset with a mocked LLM."""
@@ -178,8 +198,12 @@ class TestGenerateQADataset:
                 question=f"Question about chunk {chunk.chunk_index}?",
                 question_type="factual",
                 relevant_chunk_ids=[chunk.id_str()],
-                metadata={"synthetic": True, "chunk_method": chunk.method,
-                          "source_chunk_index": chunk.chunk_index, "source_page": None},
+                metadata={
+                    "synthetic": True,
+                    "chunk_method": chunk.method,
+                    "source_chunk_index": chunk.chunk_index,
+                    "source_page": None,
+                },
             )
 
         monkeypatch.setattr("src.qa_generator._generate_one", fake_generate_one)
@@ -187,7 +211,9 @@ class TestGenerateQADataset:
         monkeypatch.setattr("src.qa_generator.instructor.from_openai", lambda c: MagicMock())
 
         with patch("src.qa_generator.OpenAI"):
-            dataset = generate_qa_dataset(chunks, "fixed_256_ol50", n_pairs=n_pairs, qa_dir=tmp_path)
+            dataset = generate_qa_dataset(
+                chunks, "fixed_256_ol50", n_pairs=n_pairs, qa_dir=tmp_path
+            )
         return dataset, call_count[0]
 
     def test_returns_qa_dataset(self, monkeypatch, tmp_path):
@@ -205,7 +231,7 @@ class TestGenerateQADataset:
         dataset1, count1 = self._patched_generate(monkeypatch, chunks, n_pairs=3, tmp_path=tmp_path)
         # Second call — cache file now exists, should not invoke _generate_one.
         dataset2, count2 = self._patched_generate(monkeypatch, chunks, n_pairs=3, tmp_path=tmp_path)
-        assert count2 == 0   # no LLM calls on cache hit
+        assert count2 == 0  # no LLM calls on cache hit
         assert dataset2.size == dataset1.size
 
     def test_chunk_ids_valid(self, monkeypatch, tmp_path):

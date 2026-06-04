@@ -6,6 +6,22 @@ RAG systems have a dozen design knobs — chunk size, overlap, embedding model, 
 
 This project builds a grid search framework that runs every combination across a 4×2×3 configuration space (24 experiments), computes IR metrics per config with per-config synthetic QA datasets, and surfaces the optimal setup with 9 visualisation charts — all from a single PDF with results committed to the repo.
 
+*Companion post: [Systematic RAG Evaluation: What Actually Matters When You Measure It](docs/blog_post.md) — the community's reference config (fixed_256 + small + vector) ranked 11th out of 24.*
+
+---
+
+## Key Concepts
+
+**experiment_id** — deterministic slug built from the config triple: `{chunk_label}__{embed_label}__{retrieval_method}` (e.g. `fixed_256_ol50__small__vector`). Used as the cache filename under `experiments/` and as the x-axis label in charts.
+
+**per-config QA dataset** — each chunking configuration generates its own QA dataset tied to that config's chunk UUIDs. A question written for `fixed_256` chunks is never reused for `semantic` chunks — doing so biases the eval toward configs whose chunk boundaries happen to match how the questions were phrased. Cache key is the frozenset of chunk UUIDs; stale when re-chunked.
+
+**IR metrics** — MRR (Mean Reciprocal Rank), MAP (Mean Average Precision), Recall@K, Precision@K, NDCG@K for K ∈ {1, 3, 5, 10}. All computed per-query then averaged; stored in `experiments/{id}.json`.
+
+**hybrid retrieval** (α=0.5) — linear interpolation of min-max normalised BM25 and vector scores: `score = α × bm25_norm + (1−α) × vector_norm`. Alpha=0.5 is the fixed default; tuning it per-document is left as a follow-on.
+
+**factorial grid** — 4 chunk configs × 2 embed models × 3 retrieval methods = 24 cells. One-at-a-time ablations miss interaction effects (the large embed model wins on semantic chunks but loses on sentence chunks); only the full grid surfaces this.
+
 ---
 
 ## The Core Engineering Problem

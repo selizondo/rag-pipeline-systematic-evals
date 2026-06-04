@@ -1,8 +1,15 @@
 import pytest
+
 from src.config import (
-    ChunkConfig, ChunkStrategy, EmbedConfig, EmbedModel,
-    RetrievalConfig, RetrievalMethod, ExperimentConfig,
-    build_experiment_grid, default_chunk_configs,
+    ChunkConfig,
+    ChunkStrategy,
+    EmbedConfig,
+    EmbedModel,
+    ExperimentConfig,
+    RetrievalConfig,
+    RetrievalMethod,
+    build_experiment_grid,
+    default_chunk_configs,
 )
 
 
@@ -16,7 +23,9 @@ class TestChunkConfig:
         assert c.label() == "sentence_5s_ol1"
 
     def test_label_semantic(self):
-        c = ChunkConfig(strategy=ChunkStrategy.SEMANTIC, breakpoint_threshold=0.65, max_sentences=10)
+        c = ChunkConfig(
+            strategy=ChunkStrategy.SEMANTIC, breakpoint_threshold=0.65, max_sentences=10
+        )
         assert "semantic" in c.label()
 
     def test_invalid_overlap_fixed(self):
@@ -54,7 +63,7 @@ class TestExperimentConfig:
 class TestBuildGrid:
     def test_default_grid_size(self):
         grid = build_experiment_grid()
-        assert len(grid) == 24   # 4 × 2 × 3
+        assert len(grid) == 24  # 4 × 2 × 3
 
     def test_all_combinations_present(self):
         grid = build_experiment_grid()
@@ -68,4 +77,4 @@ class TestBuildGrid:
             chunk_configs=[default_chunk_configs()[0]],
             retrieval_configs=[RetrievalConfig(method=RetrievalMethod.VECTOR)],
         )
-        assert len(grid) == 2   # 1 chunk × 2 embed × 1 retrieval
+        assert len(grid) == 2  # 1 chunk × 2 embed × 1 retrieval

@@ -21,6 +21,7 @@ from datetime import datetime, timezone
 
 from rag_common import metrics
 from rag_common.retrievers import RetrieverProtocol
+
 from src.config import EvaluationResult, ExperimentConfig, MetricsResult
 from src.qa_generator import QADataset
 
@@ -57,41 +58,52 @@ def evaluate(
         elapsed = time.perf_counter() - t0
 
         retrieved_ids = [r.chunk.id_str() for r in results]
-        relevant_ids  = set(pair.relevant_chunk_ids)
+        relevant_ids = set(pair.relevant_chunk_ids)
 
         query_results.append((retrieved_ids, relevant_ids))
         retrieval_times.append(elapsed)
 
-        per_query_detail.append({
-            "question":       pair.question,
-            "question_type":  pair.question_type,
-            "retrieved_ids":  retrieved_ids[:5],   # top-5 for debugging
-            "relevant_ids":   list(relevant_ids),
-            "retrieval_time": round(elapsed, 4),
-            **{f"recall@{k}":    metrics.recall_at_k(retrieved_ids, relevant_ids, k)   for k in _K_VALUES},
-            **{f"precision@{k}": metrics.precision_at_k(retrieved_ids, relevant_ids, k) for k in _K_VALUES},
-            **{f"ndcg@{k}":      metrics.ndcg_at_k(retrieved_ids, relevant_ids, k)      for k in _K_VALUES},
-            "rr":             metrics.reciprocal_rank(retrieved_ids, relevant_ids),
-            "ap":             metrics.average_precision(retrieved_ids, relevant_ids),
-        })
+        per_query_detail.append(
+            {
+                "question": pair.question,
+                "question_type": pair.question_type,
+                "retrieved_ids": retrieved_ids[:5],  # top-5 for debugging
+                "relevant_ids": list(relevant_ids),
+                "retrieval_time": round(elapsed, 4),
+                **{
+                    f"recall@{k}": metrics.recall_at_k(retrieved_ids, relevant_ids, k)
+                    for k in _K_VALUES
+                },
+                **{
+                    f"precision@{k}": metrics.precision_at_k(retrieved_ids, relevant_ids, k)
+                    for k in _K_VALUES
+                },
+                **{
+                    f"ndcg@{k}": metrics.ndcg_at_k(retrieved_ids, relevant_ids, k)
+                    for k in _K_VALUES
+                },
+                "rr": metrics.reciprocal_rank(retrieved_ids, relevant_ids),
+                "ap": metrics.average_precision(retrieved_ids, relevant_ids),
+            }
+        )
 
     # Aggregate across all queries.
     metrics_result = MetricsResult(
-        recall_at_k    = {str(k): metrics.mean_recall_at_k(query_results, k)    for k in _K_VALUES},
-        precision_at_k = {str(k): metrics.mean_precision_at_k(query_results, k) for k in _K_VALUES},
-        mrr            = metrics.mrr(query_results),
-        map_score      = metrics.map_score(query_results),
-        ndcg_at_k      = {str(k): metrics.mean_ndcg_at_k(query_results, k)      for k in _K_VALUES},
-        total_queries  = len(dataset.pairs),
-        avg_retrieval_time_s = sum(retrieval_times) / len(retrieval_times),
+        recall_at_k={str(k): metrics.mean_recall_at_k(query_results, k) for k in _K_VALUES},
+        precision_at_k={str(k): metrics.mean_precision_at_k(query_results, k) for k in _K_VALUES},
+        mrr=metrics.mrr(query_results),
+        map_score=metrics.map_score(query_results),
+        ndcg_at_k={str(k): metrics.mean_ndcg_at_k(query_results, k) for k in _K_VALUES},
+        total_queries=len(dataset.pairs),
+        avg_retrieval_time_s=sum(retrieval_times) / len(retrieval_times),
     )
 
     return EvaluationResult(
-        experiment_id = config.experiment_id,
-        config        = config,
-        metrics       = metrics_result,
-        query_results = per_query_detail,
-        generated_at  = datetime.now(timezone.utc).isoformat(),
+        experiment_id=config.experiment_id,
+        config=config,
+        metrics=metrics_result,
+        query_results=per_query_detail,
+        generated_at=datetime.now(timezone.utc).isoformat(),
     )
 
 

@@ -14,6 +14,8 @@ require sentence-transformers unless reranking is actually invoked.
 
 from __future__ import annotations
 
+from typing import Any
+
 from rag_common.models import RetrievalResult
 from rag_common.retrievers import RetrieverProtocol
 
@@ -21,7 +23,7 @@ from rag_common.retrievers import RetrieverProtocol
 class CrossEncoderReranker:
     def __init__(self, model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2") -> None:
         self._model_name = model_name
-        self._model = None
+        self._model: Any = None
 
     def _load(self) -> None:
         if self._model is None:

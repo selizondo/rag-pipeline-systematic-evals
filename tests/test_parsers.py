@@ -7,12 +7,12 @@ from pathlib import Path
 
 import pytest
 
-from src.parsers import ParsedDocument, ParsedPage, parse_pdf, _clean
-
+from src.parsers import ParsedDocument, ParsedPage, _clean, parse_pdf
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_pdf(text_per_page: list[str]) -> Path:
     """Write a minimal multi-page PDF using fpdf2 and return its path."""
@@ -36,6 +36,7 @@ def _make_pdf(text_per_page: list[str]) -> Path:
 # _clean
 # ---------------------------------------------------------------------------
 
+
 class TestClean:
     def test_collapses_spaces(self):
         assert "a b" in _clean("a   b")
@@ -55,6 +56,7 @@ class TestClean:
 # ---------------------------------------------------------------------------
 # ParsedDocument
 # ---------------------------------------------------------------------------
+
 
 class TestParsedDocument:
     def _doc(self) -> ParsedDocument:
@@ -77,8 +79,10 @@ class TestParsedDocument:
         assert self._doc().page_count == 2
 
     def test_empty_pages_excluded_from_full_text(self):
-        pages = [ParsedPage(page_number=1, text="Real content."),
-                 ParsedPage(page_number=2, text="   ")]
+        pages = [
+            ParsedPage(page_number=1, text="Real content."),
+            ParsedPage(page_number=2, text="   "),
+        ]
         doc = ParsedDocument(source="x.pdf", pages=pages)
         assert "Real content." in doc.full_text
         assert doc.full_text.count("\n") == 0  # only one real page
@@ -87,6 +91,7 @@ class TestParsedDocument:
 # ---------------------------------------------------------------------------
 # parse_pdf
 # ---------------------------------------------------------------------------
+
 
 class TestParsePdf:
     def test_file_not_found(self):

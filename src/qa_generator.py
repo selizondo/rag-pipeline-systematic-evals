@@ -30,25 +30,24 @@ and skipped — the pipeline never crashes on a bad LLM response.
 
 from __future__ import annotations
 
-import json
 import logging
 import random
 import time
 from pathlib import Path
 from typing import Literal
 
-logger = logging.getLogger(__name__)
-
 import instructor
 from openai import OpenAI
 from pydantic import BaseModel, Field, field_validator
-
 from rag_common.models import Chunk
+
+logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
 # Pydantic models for structured LLM output
 # ---------------------------------------------------------------------------
+
 
 class QAPairResponse(BaseModel):
     """
@@ -58,6 +57,7 @@ class QAPairResponse(BaseModel):
     `question` must paraphrase the chunk — the validator rejects questions
     that are pure copy-paste (first 30 chars identical to chunk content).
     """
+
     question: str = Field(description="A natural-language question answerable from the chunk.")
     question_type: Literal["factual", "conceptual", "comparative", "analytical"] = Field(
         description="Category of the question."
@@ -73,14 +73,16 @@ class QAPairResponse(BaseModel):
 
 class QAPair(BaseModel):
     """One synthetic QA pair tied to a specific chunk."""
+
     question: str
     question_type: str
-    relevant_chunk_ids: list[str]   # UUIDs of the source chunk(s)
+    relevant_chunk_ids: list[str]  # UUIDs of the source chunk(s)
     metadata: dict = Field(default_factory=dict)
 
 
 class QADataset(BaseModel):
     """Full QA dataset for one chunking configuration."""
+
     chunk_config_label: str
     pairs: list[QAPair]
 
@@ -112,6 +114,7 @@ def _user_prompt(chunk_content: str) -> str:
 # ---------------------------------------------------------------------------
 # Generator
 # ---------------------------------------------------------------------------
+
 
 def generate_qa_dataset(
     chunks: list[Chunk],
@@ -175,6 +178,7 @@ def generate_qa_dataset(
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _sample_chunks(chunks: list[Chunk], n: int, seed: int) -> list[Chunk]:
     """
     Sample `n` chunks from `chunks`.
@@ -210,7 +214,7 @@ def _generate_one(
             response_model=QAPairResponse,
             messages=[
                 {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user",   "content": _user_prompt(chunk.content)},
+                {"role": "user", "content": _user_prompt(chunk.content)},
             ],
             max_retries=3,
         )
@@ -233,6 +237,7 @@ def _generate_one(
 # ---------------------------------------------------------------------------
 # Persistence
 # ---------------------------------------------------------------------------
+
 
 def _save_dataset(dataset: QADataset, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)

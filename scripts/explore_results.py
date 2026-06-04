@@ -16,7 +16,6 @@ import json
 import sys
 from pathlib import Path
 
-
 EXPERIMENTS_DIR = Path(__file__).parent.parent / "experiments"
 
 METRIC_KEYS = {
@@ -74,10 +73,14 @@ def print_leaderboard(results: list[dict], metric: str, top: int) -> None:
         primary = get_metric(r, metric)
         queries = r.get("metrics", {}).get("total_queries", "?")
         cfg_label = label_config(r)
-        print(f"{i:<5}  {cfg_label:<38}  {primary:>7.3f}  {mrr:>7.3f}  {r5:>7.2f}  {ndcg5:>7.3f}  {queries:>7}")
+        print(
+            f"{i:<5}  {cfg_label:<38}  {primary:>7.3f}  {mrr:>7.3f}  {r5:>7.2f}  {ndcg5:>7.3f}  {queries:>7}"
+        )
 
     print(f"{'─' * len(header)}")
-    print(f"  {len(results)} total experiments  |  sorted by {metric_label}  |  all values from committed experiments/\n")
+    print(
+        f"  {len(results)} total experiments  |  sorted by {metric_label}  |  all values from committed experiments/\n"
+    )
 
 
 def print_dimension_breakdown(results: list[dict], metric: str, dim: str) -> None:
@@ -103,15 +106,30 @@ def print_dimension_breakdown(results: list[dict], metric: str, dim: str) -> Non
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--top", type=int, default=None, help="Show top N configs (default: all)")
-    parser.add_argument("--metric", choices=list(METRIC_KEYS), default="mrr", help="Primary sort metric (default: mrr)")
-    parser.add_argument("--dim", choices=DIMENSIONS, default=None, help="Show per-dimension breakdown instead of full leaderboard")
+    parser.add_argument(
+        "--metric",
+        choices=list(METRIC_KEYS),
+        default="mrr",
+        help="Primary sort metric (default: mrr)",
+    )
+    parser.add_argument(
+        "--dim",
+        choices=DIMENSIONS,
+        default=None,
+        help="Show per-dimension breakdown instead of full leaderboard",
+    )
     args = parser.parse_args()
 
     if not EXPERIMENTS_DIR.exists() or not list(EXPERIMENTS_DIR.glob("*.json")):
         print(f"No experiment results found in {EXPERIMENTS_DIR}/", file=sys.stderr)
-        print("Run `make eval` to generate results, or ensure you're in the repo root.", file=sys.stderr)
+        print(
+            "Run `make eval` to generate results, or ensure you're in the repo root.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     results = load_results(EXPERIMENTS_DIR)

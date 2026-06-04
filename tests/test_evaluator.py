@@ -3,20 +3,24 @@
 from __future__ import annotations
 
 import pytest
-
 from rag_common.models import Chunk, RetrievalResult
-from rag_common.retrievers import RetrieverProtocol
+
 from src.config import (
-    ChunkConfig, ChunkStrategy, EmbedConfig, EmbedModel,
-    ExperimentConfig, RetrievalConfig, RetrievalMethod,
+    ChunkConfig,
+    ChunkStrategy,
+    EmbedConfig,
+    EmbedModel,
+    ExperimentConfig,
+    RetrievalConfig,
+    RetrievalMethod,
 )
 from src.evaluator import _K_VALUES, best_config, evaluate
 from src.qa_generator import QADataset, QAPair
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_chunks(n: int) -> list[Chunk]:
     return [Chunk(content=f"chunk {i}", chunk_index=i) for i in range(n)]
@@ -29,8 +33,12 @@ def _make_dataset(chunks: list[Chunk], n_pairs: int | None = None) -> QADataset:
             question=f"What is chunk {i}?",
             question_type="factual",
             relevant_chunk_ids=[chunks[i % len(chunks)].id_str()],
-            metadata={"synthetic": True, "chunk_method": "fixed_size",
-                      "source_chunk_index": i, "source_page": 1},
+            metadata={
+                "synthetic": True,
+                "chunk_method": "fixed_size",
+                "source_chunk_index": i,
+                "source_page": 1,
+            },
         )
         for i in range(n)
     ]
@@ -47,6 +55,7 @@ def _make_config() -> ExperimentConfig:
 
 class PerfectRetriever:
     """Always returns the relevant chunk first."""
+
     def __init__(self, chunks: list[Chunk]):
         self._by_id = {c.id_str(): c for c in chunks}
         self._chunks = chunks
@@ -56,27 +65,35 @@ class PerfectRetriever:
         for chunk in self._chunks:
             if chunk.content in query or str(chunk.chunk_index) in query:
                 ordered = [chunk] + [c for c in self._chunks if c.id_str() != chunk.id_str()]
-                return [RetrievalResult(chunk=c, score=1.0 - i * 0.1, retriever_type="dense")
-                        for i, c in enumerate(ordered[:top_k])]
-        return [RetrievalResult(chunk=c, score=1.0, retriever_type="dense")
-                for c in self._chunks[:top_k]]
+                return [
+                    RetrievalResult(chunk=c, score=1.0 - i * 0.1, retriever_type="dense")
+                    for i, c in enumerate(ordered[:top_k])
+                ]
+        return [
+            RetrievalResult(chunk=c, score=1.0, retriever_type="dense")
+            for c in self._chunks[:top_k]
+        ]
 
 
 class WorstRetriever:
     """Never returns the relevant chunk in top results."""
+
     def __init__(self, chunks: list[Chunk]):
         self._chunks = chunks
 
     def retrieve(self, query: str, top_k: int) -> list[RetrievalResult]:
         # Return chunks in reverse order so the relevant one is always last.
         reversed_chunks = list(reversed(self._chunks))
-        return [RetrievalResult(chunk=c, score=0.1, retriever_type="dense")
-                for c in reversed_chunks[:top_k]]
+        return [
+            RetrievalResult(chunk=c, score=0.1, retriever_type="dense")
+            for c in reversed_chunks[:top_k]
+        ]
 
 
 # ---------------------------------------------------------------------------
 # evaluate()
 # ---------------------------------------------------------------------------
+
 
 class TestEvaluate:
     def test_returns_evaluation_result(self):
@@ -84,6 +101,7 @@ class TestEvaluate:
         dataset = _make_dataset(chunks)
         result = evaluate(dataset, PerfectRetriever(chunks), _make_config())
         from src.config import EvaluationResult
+
         assert isinstance(result, EvaluationResult)
 
     def test_experiment_id_matches_config(self):
@@ -127,7 +145,9 @@ class TestEvaluate:
 
     def test_per_query_has_expected_keys(self):
         chunks = _make_chunks(3)
-        result = evaluate(_make_dataset(chunks, n_pairs=1), PerfectRetriever(chunks), _make_config())
+        result = evaluate(
+            _make_dataset(chunks, n_pairs=1), PerfectRetriever(chunks), _make_config()
+        )
         detail = result.query_results[0]
         assert "question" in detail
         assert "retrieved_ids" in detail
@@ -160,22 +180,31 @@ class TestEvaluate:
 # best_config()
 # ---------------------------------------------------------------------------
 
+
 class TestBestConfig:
     def _make_result(self, mrr: float, chunks: list[Chunk]) -> object:
         from src.config import EvaluationResult, MetricsResult
+
         cfg = _make_config()
         return EvaluationResult(
             experiment_id=cfg.experiment_id,
             config=cfg,
             metrics=MetricsResult(
-                recall_at_k={"5": 0.8}, precision_at_k={"5": 0.2},
-                mrr=mrr, map_score=mrr,
-                ndcg_at_k={"5": mrr}, total_queries=5,
+                recall_at_k={"5": 0.8},
+                precision_at_k={"5": 0.2},
+                mrr=mrr,
+                map_score=mrr,
+                ndcg_at_k={"5": mrr},
+                total_queries=5,
             ),
         )
 
     def test_returns_highest_mrr(self):
         chunks = _make_chunks(3)
-        results = [self._make_result(0.5, chunks), self._make_result(0.9, chunks), self._make_result(0.3, chunks)]
+        results = [
+            self._make_result(0.5, chunks),
+            self._make_result(0.9, chunks),
+            self._make_result(0.3, chunks),
+        ]
         best = best_config(results, primary="mrr")
         assert best.metrics.mrr == 0.9

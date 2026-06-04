@@ -28,11 +28,11 @@ from pathlib import Path
 import numpy as np
 import tiktoken
 from openai import OpenAI
-
 from rag_common.models import Chunk
+
 from src.config import EmbedConfig
 
-_MAX_TOKENS = 8191   # OpenAI embedding models hard limit
+_MAX_TOKENS = 8191  # OpenAI embedding models hard limit
 
 # Lazy-loaded — tiktoken.get_encoding() is slow (~200 ms); skip it at import time.
 _tokenizer: tiktoken.Encoding | None = None
@@ -66,6 +66,7 @@ def _get_client() -> OpenAI:
 # ---------------------------------------------------------------------------
 # Core embedding functions
 # ---------------------------------------------------------------------------
+
 
 def embed_chunks(
     chunks: list[Chunk],
@@ -116,6 +117,7 @@ def embed_query(query: str, model: str) -> np.ndarray:
 # Batching
 # ---------------------------------------------------------------------------
 
+
 def _batch_embed(texts: list[str], config: EmbedConfig) -> np.ndarray:
     """
     Send texts to OpenAI in batches; reassemble into a single matrix.
@@ -124,12 +126,9 @@ def _batch_embed(texts: list[str], config: EmbedConfig) -> np.ndarray:
     (n_batches / n_workers) × per_batch_latency instead of n_batches × latency.
     OpenAI's embedding endpoint is safe for concurrent requests.
     """
-    batches = [
-        texts[i : i + config.batch_size]
-        for i in range(0, len(texts), config.batch_size)
-    ]
+    batches = [texts[i : i + config.batch_size] for i in range(0, len(texts), config.batch_size)]
 
-    results: list[np.ndarray] = [None] * len(batches)   # type: ignore[list-item]
+    results: list[np.ndarray] = [None] * len(batches)  # type: ignore[list-item]
 
     def _embed_batch(args: tuple[int, list[str]]) -> None:
         idx, batch = args
@@ -137,9 +136,7 @@ def _batch_embed(texts: list[str], config: EmbedConfig) -> np.ndarray:
         for attempt in range(2):
             try:
                 response = client.embeddings.create(input=batch, model=config.model.value)
-                results[idx] = np.array(
-                    [d.embedding for d in response.data], dtype=np.float32
-                )
+                results[idx] = np.array([d.embedding for d in response.data], dtype=np.float32)
                 return
             except Exception as exc:
                 if attempt == 0:
@@ -156,6 +153,7 @@ def _batch_embed(texts: list[str], config: EmbedConfig) -> np.ndarray:
 # ---------------------------------------------------------------------------
 # Cache helpers
 # ---------------------------------------------------------------------------
+
 
 def _cache_path(config: EmbedConfig, chunk_label: str) -> Path:
     return config.cache_dir / config.label() / f"{chunk_label}.pkl"

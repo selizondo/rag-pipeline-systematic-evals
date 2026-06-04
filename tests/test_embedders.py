@@ -7,22 +7,21 @@ deterministic vectors — no API key or network required.
 
 from __future__ import annotations
 
-import pickle
-import tempfile
-from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
-import pytest
-
 from rag_common.models import Chunk
+
 from src.config import EmbedConfig, EmbedModel
 from src.embedders import (
-    _batch_embed, _cache_path, _load_cache, _save_cache,
-    cache_exists, embed_chunks, embed_query,
+    _batch_embed,
+    _cache_path,
+    _load_cache,
+    _save_cache,
+    cache_exists,
+    embed_chunks,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -47,9 +46,7 @@ def _fake_embed_response(texts: list[str]) -> object:
 
 def _patched_client(monkeypatch):
     mock_client = MagicMock()
-    mock_client.embeddings.create.side_effect = (
-        lambda input, model: _fake_embed_response(input)
-    )
+    mock_client.embeddings.create.side_effect = lambda input, model: _fake_embed_response(input)
     monkeypatch.setattr("src.embedders._client", mock_client)
     return mock_client
 
@@ -57,6 +54,7 @@ def _patched_client(monkeypatch):
 # ---------------------------------------------------------------------------
 # Cache helpers
 # ---------------------------------------------------------------------------
+
 
 class TestCacheHelpers:
     def test_cache_path_structure(self, tmp_path):
@@ -92,6 +90,7 @@ class TestCacheHelpers:
 # ---------------------------------------------------------------------------
 # embed_chunks
 # ---------------------------------------------------------------------------
+
 
 class TestEmbedChunks:
     def test_returns_correct_shape(self, monkeypatch, tmp_path):
@@ -132,7 +131,7 @@ class TestEmbedChunks:
         embed_chunks(old_chunks, cfg, "mismatch_label")
         first_count = mock.embeddings.create.call_count
 
-        new_chunks = _make_chunks(3)   # different UUIDs
+        new_chunks = _make_chunks(3)  # different UUIDs
         embed_chunks(new_chunks, cfg, "mismatch_label")
         assert mock.embeddings.create.call_count > first_count
 
@@ -151,6 +150,7 @@ class TestEmbedChunks:
 # ---------------------------------------------------------------------------
 # _batch_embed
 # ---------------------------------------------------------------------------
+
 
 class TestBatchEmbed:
     def test_batch_sizes(self, monkeypatch, tmp_path):

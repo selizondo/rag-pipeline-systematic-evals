@@ -38,28 +38,37 @@ console = Console()
 # CLI
 # ---------------------------------------------------------------------------
 
+
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="rag-eval",
         description="Systematic RAG pipeline evaluation across a 4×2×3 config grid.",
     )
     parser.add_argument("pdf", type=Path, help="Path to the PDF document")
-    parser.add_argument("--n-pairs",  type=int, default=25,
-                        help="Synthetic QA pairs per chunk config (default: 25)")
-    parser.add_argument("--out-dir",  type=Path, default=Path("experiments"),
-                        help="Experiment results directory")
-    parser.add_argument("--qa-dir",   type=Path, default=Path("data/qa_datasets"),
-                        help="QA dataset cache directory")
-    parser.add_argument("--viz-dir",  type=Path, default=Path("visualizations"),
-                        help="Chart output directory")
-    parser.add_argument("--force",    action="store_true",
-                        help="Re-run even if result files already exist")
-    parser.add_argument("--no-charts", action="store_true",
-                        help="Skip chart generation")
-    parser.add_argument("--top-n",   type=int, default=5,
-                        help="Number of top configs shown in summary table")
-    parser.add_argument("--rerank", action="store_true",
-                        help="Apply cross-encoder reranking after retrieval (requires sentence-transformers)")
+    parser.add_argument(
+        "--n-pairs", type=int, default=25, help="Synthetic QA pairs per chunk config (default: 25)"
+    )
+    parser.add_argument(
+        "--out-dir", type=Path, default=Path("experiments"), help="Experiment results directory"
+    )
+    parser.add_argument(
+        "--qa-dir", type=Path, default=Path("data/qa_datasets"), help="QA dataset cache directory"
+    )
+    parser.add_argument(
+        "--viz-dir", type=Path, default=Path("visualizations"), help="Chart output directory"
+    )
+    parser.add_argument(
+        "--force", action="store_true", help="Re-run even if result files already exist"
+    )
+    parser.add_argument("--no-charts", action="store_true", help="Skip chart generation")
+    parser.add_argument(
+        "--top-n", type=int, default=5, help="Number of top configs shown in summary table"
+    )
+    parser.add_argument(
+        "--rerank",
+        action="store_true",
+        help="Apply cross-encoder reranking after retrieval (requires sentence-transformers)",
+    )
     return parser.parse_args(argv)
 
 
@@ -67,15 +76,18 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 # Rich output helpers
 # ---------------------------------------------------------------------------
 
+
 def _banner(pdf_path: Path, n_experiments: int) -> None:
-    console.print(Panel(
-        f"[bold cyan]RAG Pipeline — Systematic Evaluation[/]\n\n"
-        f"  PDF          : [green]{pdf_path}[/]\n"
-        f"  Experiments  : [yellow]{n_experiments}[/] configurations\n"
-        f"  Grid         : 4 chunk × 2 embed × 3 retrieval",
-        title="[bold]P3[/]",
-        expand=False,
-    ))
+    console.print(
+        Panel(
+            f"[bold cyan]RAG Pipeline — Systematic Evaluation[/]\n\n"
+            f"  PDF          : [green]{pdf_path}[/]\n"
+            f"  Experiments  : [yellow]{n_experiments}[/] configurations\n"
+            f"  Grid         : 4 chunk × 2 embed × 3 retrieval",
+            title="[bold]P3[/]",
+            expand=False,
+        )
+    )
 
 
 def _section(title: str) -> None:
@@ -87,14 +99,14 @@ def _print_results_table(results: list[EvaluationResult], top_n: int) -> None:
     top = sorted_results[:top_n]
 
     table = Table(title=f"Top {top_n} Configurations by MRR", show_lines=True)
-    table.add_column("Rank",       style="bold", justify="center", width=5)
-    table.add_column("Experiment",             width=38)
-    table.add_column("MRR",        justify="right")
-    table.add_column("MAP",        justify="right")
-    table.add_column("Recall@5",   justify="right")
-    table.add_column("NDCG@5",     justify="right")
-    table.add_column("Queries",    justify="right")
-    table.add_column("Time (ms)",  justify="right")
+    table.add_column("Rank", style="bold", justify="center", width=5)
+    table.add_column("Experiment", width=38)
+    table.add_column("MRR", justify="right")
+    table.add_column("MAP", justify="right")
+    table.add_column("Recall@5", justify="right")
+    table.add_column("NDCG@5", justify="right")
+    table.add_column("Queries", justify="right")
+    table.add_column("Time (ms)", justify="right")
 
     for rank, r in enumerate(top, 1):
         m = r.metrics
@@ -114,17 +126,19 @@ def _print_results_table(results: list[EvaluationResult], top_n: int) -> None:
 
 def _print_best_summary(best: EvaluationResult) -> None:
     m = best.metrics
-    console.print(Panel(
-        f"[bold yellow]Best Configuration[/]: [cyan]{best.experiment_id}[/]\n\n"
-        f"  MRR        : [bold]{m.mrr:.4f}[/]\n"
-        f"  MAP        : {m.map_score:.4f}\n"
-        f"  Recall@5   : {m.recall_at_k.get('5', 0):.4f}\n"
-        f"  NDCG@5     : {m.ndcg_at_k.get('5', 0):.4f}\n"
-        f"  Queries    : {m.total_queries}\n"
-        f"  Avg latency: {m.avg_retrieval_time_s * 1000:.1f} ms",
-        title="[bold green]Winner[/]",
-        expand=False,
-    ))
+    console.print(
+        Panel(
+            f"[bold yellow]Best Configuration[/]: [cyan]{best.experiment_id}[/]\n\n"
+            f"  MRR        : [bold]{m.mrr:.4f}[/]\n"
+            f"  MAP        : {m.map_score:.4f}\n"
+            f"  Recall@5   : {m.recall_at_k.get('5', 0):.4f}\n"
+            f"  NDCG@5     : {m.ndcg_at_k.get('5', 0):.4f}\n"
+            f"  Queries    : {m.total_queries}\n"
+            f"  Avg latency: {m.avg_retrieval_time_s * 1000:.1f} ms",
+            title="[bold green]Winner[/]",
+            expand=False,
+        )
+    )
 
 
 def _print_reranking_comparison(
@@ -137,33 +151,45 @@ def _print_reranking_comparison(
         base_id = r.experiment_id.replace("__reranked", "")
         reranked_by_base[base_id] = r
 
-    paired = [(r, reranked_by_base[r.experiment_id])
-              for r in base_results if r.experiment_id in reranked_by_base]
+    paired = [
+        (r, reranked_by_base[r.experiment_id])
+        for r in base_results
+        if r.experiment_id in reranked_by_base
+    ]
 
     if not paired:
-        console.print("[yellow]No paired base/reranked results found — "
-                      "run with --rerank to generate comparison data.[/]")
+        console.print(
+            "[yellow]No paired base/reranked results found — "
+            "run with --rerank to generate comparison data.[/]"
+        )
         return
 
     table = Table(title="Reranking Impact: Base vs Reranked", show_lines=True)
-    table.add_column("Experiment",        width=34)
-    table.add_column("MRR (base)",        justify="right")
-    table.add_column("MRR (reranked)",    justify="right")
-    table.add_column("ΔMRR",             justify="right")
-    table.add_column("R@5 (base)",        justify="right")
-    table.add_column("R@5 (reranked)",    justify="right")
-    table.add_column("ΔR@5",             justify="right")
+    table.add_column("Experiment", width=34)
+    table.add_column("MRR (base)", justify="right")
+    table.add_column("MRR (reranked)", justify="right")
+    table.add_column("ΔMRR", justify="right")
+    table.add_column("R@5 (base)", justify="right")
+    table.add_column("R@5 (reranked)", justify="right")
+    table.add_column("ΔR@5", justify="right")
 
     for base, reranked in sorted(paired, key=lambda x: x[0].metrics.mrr, reverse=True):
         delta_mrr = reranked.metrics.mrr - base.metrics.mrr
-        delta_r5  = (reranked.metrics.recall_at_k.get("5", 0)
-                     - base.metrics.recall_at_k.get("5", 0))
-        delta_mrr_str = (f"[green]+{delta_mrr:.4f}[/]" if delta_mrr > 0
-                         else f"[red]{delta_mrr:.4f}[/]" if delta_mrr < 0
-                         else f"{delta_mrr:.4f}")
-        delta_r5_str  = (f"[green]+{delta_r5:.4f}[/]" if delta_r5 > 0
-                         else f"[red]{delta_r5:.4f}[/]" if delta_r5 < 0
-                         else f"{delta_r5:.4f}")
+        delta_r5 = reranked.metrics.recall_at_k.get("5", 0) - base.metrics.recall_at_k.get("5", 0)
+        delta_mrr_str = (
+            f"[green]+{delta_mrr:.4f}[/]"
+            if delta_mrr > 0
+            else f"[red]{delta_mrr:.4f}[/]"
+            if delta_mrr < 0
+            else f"{delta_mrr:.4f}"
+        )
+        delta_r5_str = (
+            f"[green]+{delta_r5:.4f}[/]"
+            if delta_r5 > 0
+            else f"[red]{delta_r5:.4f}[/]"
+            if delta_r5 < 0
+            else f"{delta_r5:.4f}"
+        )
         table.add_row(
             base.experiment_id,
             f"{base.metrics.mrr:.4f}",
@@ -179,8 +205,8 @@ def _print_reranking_comparison(
 
 def _print_chart_paths(saved: dict[str, Path]) -> None:
     table = Table(title="Generated Charts", show_header=True)
-    table.add_column("Chart",  style="cyan")
-    table.add_column("Path",   style="dim")
+    table.add_column("Chart", style="cyan")
+    table.add_column("Path", style="dim")
     for name, path in saved.items():
         table.add_row(name, str(path))
     console.print(table)
@@ -189,6 +215,7 @@ def _print_chart_paths(saved: dict[str, Path]) -> None:
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)

@@ -24,15 +24,18 @@ from pathlib import Path
 from typing import Callable
 
 import numpy as np
-
 from rag_common.chunkers import FixedSizeChunker, SemanticChunker, SentenceBasedChunker
 from rag_common.models import Chunk
 from rag_common.retrievers import BM25Retriever, DenseRetriever, HybridRetriever
 from rag_common.vector_store import FAISSVectorStore
 
 from src.config import (
-    ChunkConfig, ChunkStrategy, EmbedConfig, EvaluationResult,
-    ExperimentConfig, RetrievalConfig, RetrievalMethod,
+    ChunkConfig,
+    ChunkStrategy,
+    EmbedConfig,
+    EvaluationResult,
+    RetrievalConfig,
+    RetrievalMethod,
     build_experiment_grid,
 )
 from src.embedders import embed_chunks, embed_texts
@@ -41,10 +44,10 @@ from src.parsers import parse_pdf
 from src.qa_generator import generate_qa_dataset
 from src.reranker import CrossEncoderReranker, RerankerRetriever
 
-
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
 
 def run_grid_search(
     pdf_path: Path,
@@ -108,9 +111,7 @@ def run_grid_search(
         )
 
         if cache_key not in seen_chunk_labels:
-            seen_chunk_labels[cache_key] = _chunk_document(
-                full_text, config.chunk, config.embed
-            )
+            seen_chunk_labels[cache_key] = _chunk_document(full_text, config.chunk, config.embed)
         chunks = seen_chunk_labels[cache_key]
 
         dataset = generate_qa_dataset(
@@ -140,6 +141,7 @@ def run_grid_search(
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _chunk_document(
     text: str,

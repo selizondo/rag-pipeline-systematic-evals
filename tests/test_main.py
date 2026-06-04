@@ -7,20 +7,25 @@ All I/O patched — no real PDF, API, or disk writes needed.
 from __future__ import annotations
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
-
-import pytest
+from unittest.mock import patch
 
 from src.config import (
-    ChunkConfig, ChunkStrategy, EmbedConfig, EmbedModel,
-    EvaluationResult, ExperimentConfig, MetricsResult, RetrievalConfig, RetrievalMethod,
+    ChunkConfig,
+    ChunkStrategy,
+    EmbedConfig,
+    EmbedModel,
+    EvaluationResult,
+    ExperimentConfig,
+    MetricsResult,
+    RetrievalConfig,
+    RetrievalMethod,
 )
 from src.main import main
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_result(mrr: float = 0.8) -> EvaluationResult:
     cfg = ExperimentConfig(
@@ -34,7 +39,8 @@ def _make_result(mrr: float = 0.8) -> EvaluationResult:
         metrics=MetricsResult(
             recall_at_k={"1": 0.7, "3": 0.8, "5": mrr, "10": mrr},
             precision_at_k={"1": 0.7, "3": 0.23, "5": mrr / 5, "10": mrr / 10},
-            mrr=mrr, map_score=mrr * 0.95,
+            mrr=mrr,
+            map_score=mrr * 0.95,
             ndcg_at_k={"1": 0.7, "3": 0.8, "5": mrr * 0.95, "10": mrr},
             total_queries=20,
         ),
@@ -56,6 +62,7 @@ def _run_main(tmp_path: Path, extra_args: list[str] | None = None) -> int:
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
+
 
 class TestMainCLI:
     def test_returns_zero_on_success(self, tmp_path):

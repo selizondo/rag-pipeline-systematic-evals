@@ -20,7 +20,7 @@ import pdfplumber
 
 @dataclass
 class ParsedPage:
-    page_number: int       # 1-indexed
+    page_number: int  # 1-indexed
     text: str
     char_count: int = field(init=False)
 
@@ -30,7 +30,7 @@ class ParsedPage:
 
 @dataclass
 class ParsedDocument:
-    source: str            # original file path
+    source: str  # original file path
     pages: list[ParsedPage]
 
     @property
@@ -95,6 +95,7 @@ def _clean(text: str) -> str:
     that hurt chunking quality. Strip those without altering content.
     """
     import re
+
     # Collapse multiple spaces / non-breaking spaces to a single space.
     text = re.sub(r"[ \t\xa0]+", " ", text)
     # Normalise line endings.
