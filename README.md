@@ -96,6 +96,24 @@ See [docs/failures.md](docs/failures.md) for the `fixed_256` MRR gap vs. spec re
 
 ---
 
+## Visualizations
+
+Nine charts are generated into `visualizations/` by `make eval` (pass `--no-charts` to skip):
+
+| File | What it shows |
+|---|---|
+| `mrr_heatmap.png` | MRR across all 24 configurations — color-coded matrix by chunker × embed × retrieval |
+| `mrr_leaderboard.png` | Ranked bar chart of all 24 configs by MRR — identifies top and bottom performers at a glance |
+| `chunking_comparison.png` | Per-metric comparison across chunking strategies, averaged over embedding and retrieval |
+| `embedding_comparison.png` | Per-metric comparison across embedding models, averaged over chunking and retrieval |
+| `retrieval_comparison.png` | Per-metric comparison across retrieval methods (BM25, vector, hybrid), averaged over others |
+| `recall_at_k_curves.png` | Recall@K curves for K ∈ {1, 3, 5, 10} for selected top and bottom configs |
+| `recall_precision_scatter.png` | Scatter of Recall@5 vs Precision@5 across all 24 cells — shows the ceiling effect on precision |
+| `metric_correlation.png` | Correlation matrix of MRR, MAP, Recall@5, Precision@5, NDCG@5 across all experiments |
+| `response_time_vs_quality.png` | Scatter of avg retrieval latency vs MRR — identifies speed/quality tradeoff configs |
+
+---
+
 ## Explore Results Without an API Key
 
 All 24 experiment results are committed to this repo. Run the explorer to see the full leaderboard and metric breakdown with no API key, no data download:
