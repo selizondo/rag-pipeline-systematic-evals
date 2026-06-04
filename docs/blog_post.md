@@ -437,11 +437,11 @@ The `cross-encoder/ms-marco-MiniLM-L-6-v2` model re-scores candidates and return
 ## Reproduce This Experiment
 
 ```bash
-git clone git@github.com:selizondo/newline_stuff.git
-cd newline_stuff/projects
+git clone git@github.com:selizondo/rag-pipeline-systematic-evals.git
+cd rag-pipeline-systematic-evals
 
-pip install -e rag_common
-pip install -e rag_pipeline_systematic_evals
+pip install -e ../rag-common
+pip install -e .
 
 cp rag_pipeline_systematic_evals/.env.example rag_pipeline_systematic_evals/.env
 # set OPENAI_API_KEY in .env
