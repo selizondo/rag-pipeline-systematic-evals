@@ -2,9 +2,9 @@
 
 Most RAG pipelines are built with defaults. Chunk size 512, `text-embedding-3-small`, cosine similarity, done. The community even has a reference configuration: `fixed_256 + small + vector`. On this document, it ranked 11th out of 24.
 
-This post documents 24 RAG configurations evaluated on a real document — a 119-page government statistical yearbook, not a curated benchmark designed to flatter your defaults. The configuration that wins is counterintuitive. More importantly, *why* it wins tells you when your defaults will fail.
+This post documents 24 RAG configurations evaluated on a real document: a 119-page government statistical yearbook, not a curated benchmark designed to flatter your defaults. The configuration that wins is counterintuitive. More importantly, *why* it wins tells you when your defaults will fail.
 
-One thing to take away: a decision framework for chunk strategy, embedding model, and retrieval method based on document type — not community consensus.
+One thing to take away: a decision framework for chunk strategy, embedding model, and retrieval method based on document type: not community consensus.
 
 ---
 
@@ -18,9 +18,9 @@ PDF
              └─ LLM (gets retrieved chunks as context)
 ```
 
-Each stage is a hyperparameter. The gap between worst and best configuration in this experiment is MRR = 0.322 vs MRR = 0.928 — the difference between missing 7 out of 10 relevant chunks and missing fewer than 1 in 14. When the LLM gives wrong answers, configuration gets blamed last. It should be tested first.
+Each stage is a hyperparameter. The gap between worst and best configuration in this experiment is MRR = 0.322 vs MRR = 0.928: the difference between missing 7 out of 10 relevant chunks and missing fewer than 1 in 14. When the LLM gives wrong answers, configuration gets blamed last. It should be tested first.
 
-Most teams ship a configuration in the bottom third. Not because it's hard to do better — because they never measured.
+Most teams ship a configuration in the bottom third. Not because it's hard to do better: because they never measured.
 
 ---
 
@@ -44,7 +44,7 @@ Each experiment generates its own synthetic QA dataset (25 questions), then meas
 
 Before looking at results, you need to understand what you're measuring. These four metrics capture different aspects of retrieval quality.
 
-### MRR — Mean Reciprocal Rank
+### MRR: Mean Reciprocal Rank
 
 MRR answers: *how high does the relevant chunk rank, on average?*
 
@@ -71,7 +71,7 @@ MRR is the right primary metric for RAG. The LLM reads the top 1–3 chunks. If 
 
 Recall@K answers: *does the relevant chunk appear anywhere in the top K results?*
 
-With one relevant chunk per query (1:1 ground truth), Recall@K is binary — 1 if found, 0 if not — averaged over all queries.
+With one relevant chunk per query (1:1 ground truth), Recall@K is binary: 1 if found, 0 if not: averaged over all queries.
 
 ```
 Recall@1 = 0.0  (chunk_A is not at rank 1)
@@ -81,7 +81,7 @@ Recall@5 = 1.0  (chunk_A is in top 5)
 
 Recall@5 = 1.0 is achievable but not sufficient. You can have Recall@5 = 1.0 with MRR = 0.2 if the relevant chunk always shows up at rank 5. For RAG, Recall@5 ≥ 0.90 confirms coverage; MRR tells you whether the answer is actually usable.
 
-### NDCG@K — Normalized Discounted Cumulative Gain
+### NDCG@K: Normalized Discounted Cumulative Gain
 
 NDCG@K gives more credit to relevant chunks appearing earlier:
 
@@ -94,9 +94,9 @@ Position 5: 39% credit    (÷ log₂(6) = ÷ 2.58)
 
 NDCG@K = 1.0 means the relevant chunk is always at the top. NDCG is more sensitive than MRR to whether you consistently rank relevant chunks first vs. occasionally finding them but burying them.
 
-### Precision@K — Why It's Not Your Primary Metric Here
+### Precision@K: Why It's Not Your Primary Metric Here
 
-With 1:1 ground truth, Precision@K is mathematically capped at 1/K. Precision@5 maximum is 0.20 — you retrieved 5 chunks and only 1 can possibly be relevant. This is expected, not a failure. Focus on MRR and Recall@K.
+With 1:1 ground truth, Precision@K is mathematically capped at 1/K. Precision@5 maximum is 0.20: you retrieved 5 chunks and only 1 can possibly be relevant. This is expected, not a failure. Focus on MRR and Recall@K.
 
 ---
 
@@ -110,14 +110,14 @@ This is the most consequential architectural choice in the entire system and the
 
 When you chunk a 119-page PDF with 256-character fixed-size chunks, you get roughly 1,800 chunks with UUIDs like `3a7f-...`. When you generate a QA pair, it records that the answer lives in chunk `3a7f-...`.
 
-Now you re-chunk with 512-character chunks. You get ~900 chunks. Chunk `3a7f-...` doesn't exist. The same text is inside chunk `9c2e-...`. Your 512-char retriever finds the right text — but the evaluator looks for `3a7f-...`, doesn't find it, and scores the retrieval as a miss.
+Now you re-chunk with 512-character chunks. You get ~900 chunks. Chunk `3a7f-...` doesn't exist. The same text is inside chunk `9c2e-...`. Your 512-char retriever finds the right text: but the evaluator looks for `3a7f-...`, doesn't find it, and scores the retrieval as a miss.
 
 Result: the 512-char configuration appears to fail not because retrieval is worse, but because the evaluation is broken.
 
 **The fix:** Generate a separate QA dataset per chunking configuration, tied to that run's chunk UUIDs.
 
 ```python
-# qa_generator.py — cache validated by chunk ID subset check
+# qa_generator.py: cache validated by chunk ID subset check
 if cache_path.exists():
     cached = _load_dataset(cache_path)
     current_ids = {c.id_str() for c in chunks}
@@ -127,7 +127,7 @@ if cache_path.exists():
     # stale: UUIDs changed (re-parse or re-chunk) → regenerate
 ```
 
-This validation caught a real bug. A mid-run crash (semantic chunks exceeding OpenAI's 8,192-token limit) forced a restart with fresh chunk UUIDs. The cached QA dataset still referenced the old UUIDs. Without the subset check, sentence-based configs silently scored MRR = 0.000 — technically correct, completely misleading.
+This validation caught a real bug. A mid-run crash (semantic chunks exceeding OpenAI's 8,192-token limit) forced a restart with fresh chunk UUIDs. The cached QA dataset still referenced the old UUIDs. Without the subset check, sentence-based configs silently scored MRR = 0.000: technically correct, completely misleading.
 
 **The broader lesson:** evaluation correctness is as important as pipeline correctness. Bad evaluation is worse than no evaluation because it gives you false confidence.
 
@@ -148,7 +148,7 @@ def _truncate(text: str) -> str:
     return enc.decode(tokens[:_MAX_TOKENS]) if len(tokens) > _MAX_TOKENS else text
 ```
 
-The tokenizer is lazy-loaded — `tiktoken.get_encoding()` costs ~200ms and would be paid at import time on every worker otherwise.
+The tokenizer is lazy-loaded: `tiktoken.get_encoding()` costs ~200ms and would be paid at import time on every worker otherwise.
 
 ### Cache Everything Expensive
 
@@ -191,13 +191,13 @@ The prompt explicitly forbids verbatim copying from the chunk:
 
 > *"Use natural language. Do NOT copy phrases verbatim from the chunk."*
 
-This matters for evaluation integrity. If questions are paraphrased excerpts containing the chunk's exact keywords, BM25 artificially scores high — masking real differences between retrieval methods.
+This matters for evaluation integrity. If questions are paraphrased excerpts containing the chunk's exact keywords, BM25 artificially scores high: masking real differences between retrieval methods.
 
 ---
 
 ## Results
 
-### MRR Leaderboard — All 24 Configurations
+### MRR Leaderboard: All 24 Configurations
 
 ![MRR Leaderboard](visualizations/mrr_leaderboard.png)
 
@@ -218,9 +218,9 @@ This matters for evaluation integrity. If questions are paraphrased excerpts con
 
 ---
 
-### Finding 1: Semantic Chunking Won — Against the Reference Prediction
+### Finding 1: Semantic Chunking Won: Against the Reference Prediction
 
-The community baseline — and the reference implementation for this project — predicts `fixed_256 + small + vector` as the best configuration (MRR = 0.963 on synthetic benchmarks). On `fy10syb.pdf`, the same configuration scores MRR = 0.507. That's 11th place. The configuration ranked 1st on someone else's document ranked near last on this one.
+The community baseline: and the reference implementation for this project: predicts `fixed_256 + small + vector` as the best configuration (MRR = 0.963 on synthetic benchmarks). On `fy10syb.pdf`, the same configuration scores MRR = 0.507. That's 11th place. The configuration ranked 1st on someone else's document ranked near last on this one.
 
 ![Chunking Strategy Comparison](visualizations/chunking_comparison.png)
 
@@ -232,7 +232,7 @@ The community baseline — and the reference implementation for this project —
 
 gets split at character 256 before the qualifying clause. The chunk has numbers without context; the context is in the next chunk. Neither chunk is independently answerable.
 
-Semantic chunking uses embedding similarity to detect topic boundaries — it groups this text as one unit because the sentences are semantically continuous. The resulting chunks preserve the complete statistical claim, which is the unit of information a retrieval question targets.
+Semantic chunking uses embedding similarity to detect topic boundaries: it groups this text as one unit because the sentences are semantically continuous. The resulting chunks preserve the complete statistical claim, which is the unit of information a retrieval question targets.
 
 **The rule to internalize:** chunk strategy is a hyperparameter tied to document structure, not a universal constant. The "256 chars is usually best" default comes from documents with short, self-contained paragraphs. For long-form statistical text, dense academic papers, or legal documents where context spans multiple sentences, semantic or sentence-based chunking preserves meaning better.
 
@@ -252,13 +252,13 @@ Average MRR by retrieval method across all 24 experiments:
 | Hybrid | 0.612 | 0.791 |
 | BM25 | 0.466 | 0.635 |
 
-Vector search dominates because the synthetic questions are paraphrases, not exact excerpts. When the question asks *"What criteria governed who qualified for adjustment of status?"* and the chunk says *"Persons who met the requirements for lawful permanent resident designation..."*, BM25 scores low — no exact term overlap. The embedding model captures the semantic equivalence.
+Vector search dominates because the synthetic questions are paraphrases, not exact excerpts. When the question asks *"What criteria governed who qualified for adjustment of status?"* and the chunk says *"Persons who met the requirements for lawful permanent resident designation..."*, BM25 scores low: no exact term overlap. The embedding model captures the semantic equivalence.
 
 BM25's best result is on sentence-based chunks (MRR = 0.635). Sentence boundaries preserve complete syntactic units with consistent vocabulary. Fixed-size chunks disrupt term context, hurting BM25 more than vector search.
 
 ---
 
-### Finding 3: Hybrid Retrieval Underperformed — Because Equal Weighting Assumes BM25 Is Half as Useful as Dense
+### Finding 3: Hybrid Retrieval Underperformed: Because Equal Weighting Assumes BM25 Is Half as Useful as Dense
 
 Hybrid retrieval at α = 0.5 consistently scores below pure vector. *Combining two signals should improve results, right?*
 
@@ -268,7 +268,7 @@ Not when one signal is weak. The `HybridRetriever` correctly normalizes BM25 and
 
 ---
 
-### Finding 4: Embedding Model — Marginal Gains at the Top
+### Finding 4: Embedding Model: Marginal Gains at the Top
 
 ![Embedding Model Comparison](visualizations/embedding_comparison.png)
 
@@ -285,19 +285,19 @@ In aggregate, the two models differ by 0.4% MRR. At the top of the leaderboard, 
 
 ---
 
-### Finding 5: Recall@5 vs Precision@5 — The Tradeoff Visualized
+### Finding 5: Recall@5 vs Precision@5: The Tradeoff Visualized
 
 ![Recall vs Precision Scatter](visualizations/recall_precision_scatter.png)
 
 *Each point is one experiment. X-axis: Recall@5 (does the relevant chunk appear in top 5?). Y-axis: Precision@5 (how many of the top 5 are relevant?). Top-5 configurations by MRR are labelled.*
 
-With 1:1 ground truth, Precision@5 is mathematically capped at 0.20 (one relevant chunk in five retrieved). This scatter plot confirms the expected pattern: all high-performing configurations cluster at Recall@5 = 1.0 with Precision@5 ≈ 0.20. Low-performing configurations (fixed-256 + BM25) miss on recall — the relevant chunk never makes it into the top 5.
+With 1:1 ground truth, Precision@5 is mathematically capped at 0.20 (one relevant chunk in five retrieved). This scatter plot confirms the expected pattern: all high-performing configurations cluster at Recall@5 = 1.0 with Precision@5 ≈ 0.20. Low-performing configurations (fixed-256 + BM25) miss on recall: the relevant chunk never makes it into the top 5.
 
-The shape of this chart is diagnostic: if your configurations cluster along the bottom (high precision, low recall), you're retrieving a tight set that often misses the relevant chunk — try increasing K or improving chunking. If they cluster along the right at low precision, you're casting too wide a net — tighten the retrieval strategy or improve chunk quality.
+The shape of this chart is diagnostic: if your configurations cluster along the bottom (high precision, low recall), you're retrieving a tight set that often misses the relevant chunk: try increasing K or improving chunking. If they cluster along the right at low precision, you're casting too wide a net: tighten the retrieval strategy or improve chunk quality.
 
 ---
 
-### Finding 6: MRR = MAP — What It Tells You About Your Ground Truth
+### Finding 6: MRR = MAP: What It Tells You About Your Ground Truth
 
 Every result in this experiment has MRR = MAP to four decimal places. This is not a coincidence or a bug.
 
@@ -305,9 +305,9 @@ Every result in this experiment has MRR = MAP to four decimal places. This is no
 
 *Pearson correlation matrix across all 14 IR metrics. The dark red block at MRR/MAP confirms they're identical (r = 1.0). Recall@K metrics are highly correlated across K values; NDCG@K shows a similar pattern.*
 
-**Why MRR = MAP exactly:** Average Precision for a query with one relevant document equals `1 / rank_of_first_relevant_result` — which is exactly Reciprocal Rank. When every query has exactly one relevant chunk, MAP = mean(AP) = mean(RR) = MRR. They're the same calculation.
+**Why MRR = MAP exactly:** Average Precision for a query with one relevant document equals `1 / rank_of_first_relevant_result`: which is exactly Reciprocal Rank. When every query has exactly one relevant chunk, MAP = mean(AP) = mean(RR) = MRR. They're the same calculation.
 
-The correlation matrix also reveals: Recall@K metrics at different K are tightly correlated (if you find the chunk at K=1, you find it at K=5). NDCG@K tracks MRR closely but is not identical — NDCG gives partial credit at positions 2–5, making it slightly more forgiving.
+The correlation matrix also reveals: Recall@K metrics at different K are tightly correlated (if you find the chunk at K=1, you find it at K=5). NDCG@K tracks MRR closely but is not identical: NDCG gives partial credit at positions 2–5, making it slightly more forgiving.
 
 **When this breaks:** if you generate multi-chunk questions (questions whose answer requires reading 2–3 chunks together), the 1:1 constraint disappears, MRR and MAP diverge, and Precision@K becomes informative. This is a meaningful upgrade to evaluation quality for production systems.
 
@@ -317,9 +317,9 @@ The correlation matrix also reveals: Recall@K metrics at different K are tightly
 
 ![Response Time vs Quality](visualizations/response_time_vs_quality.png)
 
-*Average retrieval time (ms) vs MRR for all 24 configurations. Pareto-optimal configurations — those where no other config is both faster and better — are annotated in red. BM25 defines the low-latency end; vector + semantic defines the quality end.*
+*Average retrieval time (ms) vs MRR for all 24 configurations. Pareto-optimal configurations: those where no other config is both faster and better: are annotated in red. BM25 defines the low-latency end; vector + semantic defines the quality end.*
 
-The retrieval latency (200–330ms for vector) is almost entirely the embedding API call for the query, not the FAISS search. On a 500–2,000 chunk corpus with a Flat index, FAISS exhaustive search takes <1ms. For this dataset size, the index choice is irrelevant — embedding latency dominates.
+The retrieval latency (200–330ms for vector) is almost entirely the embedding API call for the query, not the FAISS search. On a 500–2,000 chunk corpus with a Flat index, FAISS exhaustive search takes <1ms. For this dataset size, the index choice is irrelevant: embedding latency dominates.
 
 **What changes at scale:**
 - At 100K+ chunks, switch FAISS Flat → FAISS IVF or HNSW. Search time drops to sub-millisecond even with query embedding latency.
@@ -330,7 +330,7 @@ The retrieval latency (200–330ms for vector) is almost entirely the embedding 
 
 ![Recall@K Curves](visualizations/recall_at_k_curves.png)
 
-*Mean Recall@K at K = 1, 3, 5, 10 grouped by retrieval method. Vector reaches Recall@5 = 1.0 averaged across all configs. BM25 saturates below 0.80 even at K = 10 — the relevant chunk is simply not in the lexical top 10 for these paraphrase-style questions.*
+*Mean Recall@K at K = 1, 3, 5, 10 grouped by retrieval method. Vector reaches Recall@5 = 1.0 averaged across all configs. BM25 saturates below 0.80 even at K = 10: the relevant chunk is simply not in the lexical top 10 for these paraphrase-style questions.*
 
 ---
 
@@ -410,7 +410,7 @@ The `cross-encoder/ms-marco-MiniLM-L-6-v2` model re-scores candidates and return
 
 **When reranking helps most:**
 - Embedding retrieval already has high Recall@K (relevant chunk is somewhere in top 20) but lower MRR (it's ranked 8 instead of 1)
-- Your queries are complex or ambiguous — cross-encoders read the full context, not just a vector distance
+- Your queries are complex or ambiguous: cross-encoders read the full context, not just a vector distance
 - You can tolerate the latency increase
 
 **When it's not worth it:**
@@ -430,7 +430,7 @@ The `cross-encoder/ms-marco-MiniLM-L-6-v2` model re-scores candidates and return
 
 **4. Your evaluation is only as good as your QA dataset.** Per-config QA datasets with UUID validation are non-negotiable. One shared dataset invalidates all comparisons. A retrieval system that finds the right text but gets scored as a miss is a measurement failure, not a retrieval failure.
 
-**5. Start with `text-embedding-3-small`.** The 0.4% average MRR gap doesn't justify 3× embedding cost at the start. Upgrade to `large` only after optimizing chunking strategy — that's where the real gains are.
+**5. Start with `text-embedding-3-small`.** The 0.4% average MRR gap doesn't justify 3× embedding cost at the start. Upgrade to `large` only after optimizing chunking strategy: that's where the real gains are.
 
 ---
 

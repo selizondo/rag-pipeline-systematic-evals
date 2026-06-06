@@ -1,6 +1,6 @@
 # Failure Scenarios
 
-Documented failure modes encountered during development — including design flaws that were caught before causing silent errors, runtime dependencies that break on cold machines, and known evaluation limitations that affect how results should be interpreted.
+Documented failure modes encountered during development: including design flaws that were caught before causing silent errors, runtime dependencies that break on cold machines, and known evaluation limitations that affect how results should be interpreted.
 
 ---
 
@@ -8,17 +8,17 @@ Documented failure modes encountered during development — including design fla
 
 ### What this is
 
-When you evaluate a retrieval system, you need a set of questions with known correct answers — a **ground-truth QA dataset**. Each question has a "correct chunk": the specific passage the question was generated from. The retriever is scored on whether it returns that chunk in its top results.
+When you evaluate a retrieval system, you need a set of questions with known correct answers: a **ground-truth QA dataset**. Each question has a "correct chunk": the specific passage the question was generated from. The retriever is scored on whether it returns that chunk in its top results.
 
 The failure mode: if you generate one QA dataset and reuse it across all 24 grid configurations, you create a hidden advantage for one of them.
 
-Here is why. Each chunking strategy splits the PDF differently. `fixed_256` produces ~180 chunks of roughly 256 characters each. `semantic` produces ~60 chunks that follow topic boundaries. If you generate questions from `fixed_256` chunks and then evaluate all 24 configs against those questions, the "correct answer" for each question is a `fixed_256` chunk ID. When the `semantic` retriever runs, it has to find that same passage — but its index has completely different chunk boundaries. A 256-character `fixed_256` chunk might be split across two `semantic` chunks, or swallowed inside one. The `semantic` retriever returns what it thinks is the most relevant passage, but that passage won't match the expected `fixed_256` chunk ID even if it contains the right information. The metric says "miss" when the answer was arguably correct.
+Here is why. Each chunking strategy splits the PDF differently. `fixed_256` produces ~180 chunks of roughly 256 characters each. `semantic` produces ~60 chunks that follow topic boundaries. If you generate questions from `fixed_256` chunks and then evaluate all 24 configs against those questions, the "correct answer" for each question is a `fixed_256` chunk ID. When the `semantic` retriever runs, it has to find that same passage: but its index has completely different chunk boundaries. A 256-character `fixed_256` chunk might be split across two `semantic` chunks, or swallowed inside one. The `semantic` retriever returns what it thinks is the most relevant passage, but that passage won't match the expected `fixed_256` chunk ID even if it contains the right information. The metric says "miss" when the answer was arguably correct.
 
 The reverse is also true: if QA was generated from `semantic` chunks and evaluated against `fixed_256`, the `semantic` config gets an unfair advantage.
 
 ### Why it matters in practice
 
-This isn't a subtle 1–2% effect. A QA dataset generated from `fixed_256` chunks, when used to score a `semantic` config, can deflate the semantic config's MRR by 20–30% relative to its true retrieval quality. The "winning" config in the grid would be whichever config had its chunk boundaries used for QA generation — not the one with genuinely better retrieval. You would be measuring QA generation alignment, not retrieval quality.
+This isn't a subtle 1–2% effect. A QA dataset generated from `fixed_256` chunks, when used to score a `semantic` config, can deflate the semantic config's MRR by 20–30% relative to its true retrieval quality. The "winning" config in the grid would be whichever config had its chunk boundaries used for QA generation: not the one with genuinely better retrieval. You would be measuring QA generation alignment, not retrieval quality.
 
 This is a well-known problem in information retrieval benchmarking called **annotation bias** or **boundary leakage**. Most quick-and-dirty RAG evaluations make this mistake and don't know it.
 
@@ -26,11 +26,11 @@ This is a well-known problem in information retrieval benchmarking called **anno
 
 Each of the 4 chunking configs generates its own QA dataset. The ground truth for `fixed_256` questions uses `fixed_256` chunk IDs; the ground truth for `semantic` questions uses `semantic` chunk IDs. Each config is evaluated only against its own ground truth.
 
-The tradeoff: you can no longer compare raw MRR numbers across configs as if they were on the same scale — each MRR was computed against a different question set. What you *can* compare is the relative ordering, because each config is being evaluated fairly against its own best possible ground truth.
+The tradeoff: you can no longer compare raw MRR numbers across configs as if they were on the same scale: each MRR was computed against a different question set. What you *can* compare is the relative ordering, because each config is being evaluated fairly against its own best possible ground truth.
 
 ### Verification in code
 
-`grid_search.py` generates a `QADataset` per `ChunkConfig` before evaluation. `evaluator.evaluate()` checks that `QADataset.chunk_config_label` matches the retriever's config label and raises `ValueError` on mismatch — so this invariant is enforced at runtime, not just assumed.
+`grid_search.py` generates a `QADataset` per `ChunkConfig` before evaluation. `evaluator.evaluate()` checks that `QADataset.chunk_config_label` matches the retriever's config label and raises `ValueError` on mismatch: so this invariant is enforced at runtime, not just assumed.
 
 ---
 
@@ -42,11 +42,11 @@ The QA dataset is generated by an LLM (GPT-4o-mini): it reads each chunk and wri
 
 The problem: this assumes the question is *only* answerable by that one chunk. That assumption is often wrong.
 
-A budget document has recurring structure — each department section follows the same template (budget request, prior year actuals, staffing summary). An LLM reading a chunk about the Department of Agriculture's FY2010 staffing might generate: "How many full-time equivalents were employed in FY2010?" That question could plausibly be answered by a dozen chunks from other department sections, all of which contain FTE staffing data. If the retriever returns the Department of Energy's staffing chunk at rank 1 instead of Agriculture's, the metric records a miss. The retrieved chunk may be correct information about FTE counts; it's just not *the* generating chunk.
+A budget document has recurring structure: each department section follows the same template (budget request, prior year actuals, staffing summary). An LLM reading a chunk about the Department of Agriculture's FY2010 staffing might generate: "How many full-time equivalents were employed in FY2010?" That question could plausibly be answered by a dozen chunks from other department sections, all of which contain FTE staffing data. If the retriever returns the Department of Energy's staffing chunk at rank 1 instead of Agriculture's, the metric records a miss. The retrieved chunk may be correct information about FTE counts; it's just not *the* generating chunk.
 
 ### Why it matters
 
-This inflates false negatives uniformly across all 24 configs. Every config is penalised equally for noisy questions, so the relative ranking across configs is preserved — but the absolute MRR ceiling is lower than it would be with perfect ground truth.
+This inflates false negatives uniformly across all 24 configs. Every config is penalised equally for noisy questions, so the relative ranking across configs is preserved: but the absolute MRR ceiling is lower than it would be with perfect ground truth.
 
 Concretely: with 25 questions per config, even 3 structurally ambiguous questions (12%) introduce meaningful noise into the MRR calculation. A config that actually handles those questions correctly still gets scored 0 because it returned the "wrong" correct chunk.
 
@@ -54,13 +54,13 @@ This is why the absolute MRR numbers (0.928, 0.910, etc.) should not be interpre
 
 ### Detection
 
-Not automatically flagged. The `per_query_detail` field in each `EvaluationResult` contains `retrieved_ids` and `relevant_ids` for every query. Queries with MRR=0 where the retrieved chunk looks topically correct are candidates for noisy ground truth — inspect manually.
+Not automatically flagged. The `per_query_detail` field in each `EvaluationResult` contains `retrieved_ids` and `relevant_ids` for every query. Queries with MRR=0 where the retrieved chunk looks topically correct are candidates for noisy ground truth: inspect manually.
 
 ### Mitigation options
 
-1. **Human review** of QA pairs after generation — flag questions with ambiguous answers.
-2. **Multi-hop questions** — "What was the FTE headcount for the Department of Agriculture in FY2010?" is harder to accidentally answer from another chunk than "What was the FTE headcount in FY2010?"
-3. **Larger QA sets** — at 100 questions, 5 noisy questions is 5% noise rather than 20%. The current 25-question default is a cost tradeoff.
+1. **Human review** of QA pairs after generation: flag questions with ambiguous answers.
+2. **Multi-hop questions**: "What was the FTE headcount for the Department of Agriculture in FY2010?" is harder to accidentally answer from another chunk than "What was the FTE headcount in FY2010?"
+3. **Larger QA sets**: at 100 questions, 5 noisy questions is 5% noise rather than 20%. The current 25-question default is a cost tradeoff.
 
 ---
 
@@ -68,19 +68,19 @@ Not automatically flagged. The `per_query_detail` field in each `EvaluationResul
 
 ### What this is
 
-Splitting text into sentences is harder than it looks. The obvious approach — split on periods — breaks immediately on "Dr. Smith", "e.g.", "Fig. 3", decimal numbers, and URLs. The period at the end of "Dr." is not a sentence boundary; the period after "Smith." usually is.
+Splitting text into sentences is harder than it looks. The obvious approach: split on periods: breaks immediately on "Dr. Smith", "e.g.", "Fig. 3", decimal numbers, and URLs. The period at the end of "Dr." is not a sentence boundary; the period after "Smith." usually is.
 
-`SentenceBasedChunker` uses NLTK's **punkt tokeniser**, a pre-trained model that has learned from a large corpus which periods end sentences and which are abbreviations. On first use, punkt needs to be downloaded from NLTK's servers. On a machine where that download has not happened — a CI container, a new developer's machine, a GPU instance that was just spun up — `nltk.sent_tokenize()` raises `LookupError: Resource punkt not found`.
+`SentenceBasedChunker` uses NLTK's **punkt tokeniser**, a pre-trained model that has learned from a large corpus which periods end sentences and which are abbreviations. On first use, punkt needs to be downloaded from NLTK's servers. On a machine where that download has not happened: a CI container, a new developer's machine, a GPU instance that was just spun up: `nltk.sent_tokenize()` raises `LookupError: Resource punkt not found`.
 
 ### Why it matters
 
-If the error propagated unhandled, the sentence-based chunking config would fail silently: the grid would complete with 23 experiment files instead of 24, the missing config wouldn't appear in the results, and you might not notice. More dangerously, if the error were swallowed and replaced with empty chunks, the QA generation would run against no content and produce nonsense questions — poisoning that config's results rather than just skipping it.
+If the error propagated unhandled, the sentence-based chunking config would fail silently: the grid would complete with 23 experiment files instead of 24, the missing config wouldn't appear in the results, and you might not notice. More dangerously, if the error were swallowed and replaced with empty chunks, the QA generation would run against no content and produce nonsense questions: poisoning that config's results rather than just skipping it.
 
 ### How it's handled
 
-`SentenceBasedChunker` wraps `nltk.sent_tokenize()` in a try/except and falls back to a regex sentence splitter (`r'(?<=[.!?])\s+'`). The fallback is logged at WARNING level — the operator sees it but the pipeline continues. For this experiment corpus, the regex fallback produces acceptable results because the FY2010 budget document has few abbreviations.
+`SentenceBasedChunker` wraps `nltk.sent_tokenize()` in a try/except and falls back to a regex sentence splitter (`r'(?<=[.!?])\s+'`). The fallback is logged at WARNING level: the operator sees it but the pipeline continues. For this experiment corpus, the regex fallback produces acceptable results because the FY2010 budget document has few abbreviations.
 
-Known failure cases for the regex fallback: "Dr. Smith said hello." splits into ["Dr.", "Smith said hello."] — two fragments instead of one sentence. The same happens with "e.g.", "Fig. 3", and any URL containing a period followed by whitespace. On a different document type (medical literature, legal text, technical documentation with cross-references), the regex fallback would produce noticeably worse chunking and would affect retrieval quality.
+Known failure cases for the regex fallback: "Dr. Smith said hello." splits into ["Dr.", "Smith said hello."]: two fragments instead of one sentence. The same happens with "e.g.", "Fig. 3", and any URL containing a period followed by whitespace. On a different document type (medical literature, legal text, technical documentation with cross-references), the regex fallback would produce noticeably worse chunking and would affect retrieval quality.
 
 ### Reproduction
 
@@ -99,20 +99,20 @@ chunks = SentenceBasedChunker(sentences_per_chunk=5).chunk("Dr. Smith said hello
 
 ### What this is
 
-The project spec documents a "before optimisation" baseline for `fixed_256` chunking with `text-embedding-3-small` and vector retrieval: MRR≈0.963. The actual result in this implementation is MRR=0.507 — a 47-percentage-point gap.
+The project spec documents a "before optimisation" baseline for `fixed_256` chunking with `text-embedding-3-small` and vector retrieval: MRR≈0.963. The actual result in this implementation is MRR=0.507: a 47-percentage-point gap.
 
 ### Why this would matter if it were a bug
 
-If the gap reflected a real implementation error — wrong overlap parameter, off-by-one in the FAISS index, incorrect UUID matching — then the entire fixed-size chunking family (8 of the 24 configs) would be systematically underscored. The conclusion "semantic chunking beats fixed-size by 0.42 MRR" would be partly artifactual: fixed-size isn't that bad, the implementation is just broken.
+If the gap reflected a real implementation error: wrong overlap parameter, off-by-one in the FAISS index, incorrect UUID matching: then the entire fixed-size chunking family (8 of the 24 configs) would be systematically underscored. The conclusion "semantic chunking beats fixed-size by 0.42 MRR" would be partly artifactual: fixed-size isn't that bad, the implementation is just broken.
 
 ### Why it is likely not a bug
 
-The spec reference result was almost certainly run against a different PDF. MRR=0.963 on `fixed_256` + vector retrieval is an extraordinarily high result for this chunking strategy on a dense document. The FY2010 federal budget (`fy10syb.pdf`) has long, information-dense sentences and frequent topic shifts within paragraphs. Fixed-size 256-character chunking cuts sentences in half regularly — the embeddings of those half-sentences are degraded, which is exactly why MRR=0.507 is expected.
+The spec reference result was almost certainly run against a different PDF. MRR=0.963 on `fixed_256` + vector retrieval is an extraordinarily high result for this chunking strategy on a dense document. The FY2010 federal budget (`fy10syb.pdf`) has long, information-dense sentences and frequent topic shifts within paragraphs. Fixed-size 256-character chunking cuts sentences in half regularly: the embeddings of those half-sentences are degraded, which is exactly why MRR=0.507 is expected.
 
-A simpler document — a FAQ page, a product description, a wiki article with short paragraphs — would produce much higher fixed_256 MRR because the 256-character window captures complete thoughts. The spec author likely ran against such a document.
+A simpler document: a FAQ page, a product description, a wiki article with short paragraphs: would produce much higher fixed_256 MRR because the 256-character window captures complete thoughts. The spec author likely ran against such a document.
 
-This is the practical meaning of the README's third engineering problem: **absolute metric values are PDF-dependent**. MRR=0.963 on the spec's document and MRR=0.507 on this document are both correct; they describe different corpora. The 47-point gap is not a discrepancy to fix — it is evidence that the choice of document affects results dramatically, which is precisely why the framework is designed to be rerun on any PDF rather than inherited.
+This is the practical meaning of the README's third engineering problem: **absolute metric values are PDF-dependent**. MRR=0.963 on the spec's document and MRR=0.507 on this document are both correct; they describe different corpora. The 47-point gap is not a discrepancy to fix: it is evidence that the choice of document affects results dramatically, which is precisely why the framework is designed to be rerun on any PDF rather than inherited.
 
 ### Status
 
-Open — not root-caused. The relative ranking across all 24 configs on this document remains valid regardless of the absolute floor difference from the spec.
+Open: not root-caused. The relative ranking across all 24 configs on this document remains valid regardless of the absolute floor difference from the spec.
