@@ -16,6 +16,8 @@ MRR and Recall@K as primary quality signals, not Precision@K.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import time
 from datetime import datetime, timezone
 
@@ -98,12 +100,16 @@ def evaluate(
         avg_retrieval_time_s=sum(retrieval_times) / len(retrieval_times),
     )
 
+    config_hash = hashlib.md5(
+        json.dumps(config.model_dump(mode="json"), sort_keys=True).encode()
+    ).hexdigest()[:8]
     return EvaluationResult(
         experiment_id=config.experiment_id,
         config=config,
         metrics=metrics_result,
         query_results=per_query_detail,
         generated_at=datetime.now(timezone.utc).isoformat(),
+        config_hash=config_hash,
     )
 
 

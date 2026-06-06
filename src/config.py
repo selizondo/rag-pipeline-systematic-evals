@@ -192,6 +192,10 @@ class EvaluationResult(BaseModel):
         default="",
         description="ISO-8601 UTC timestamp when this experiment was evaluated.",
     )
+    config_hash: str = Field(
+        default="",
+        description="MD5[:8] of ExperimentConfig — stable identifier for a config cell.",
+    )
 
 
 # ---------------------------------------------------------------------------

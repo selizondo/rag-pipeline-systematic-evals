@@ -181,3 +181,7 @@ The most likely explanation is that the spec author ran against a different PDF 
 The 47-point gap does not indicate a bug. It illustrates the most important design principle in the README: **absolute metric values are PDF-dependent**. MRR=0.928 on this document, MRR=0.963 on a simpler document — both are correct for their respective corpora. What is stable across documents is the relative ordering within the grid: semantic chunking will tend to outperform fixed-size on structured documents; vector retrieval will tend to outperform BM25 on documents where natural-language queries and document language diverge. Those relationships are what the framework is designed to surface.
 
 Running this grid on your own document and comparing its relative ranking against the results here is more informative than comparing the absolute MRR numbers.
+
+## Scale boundaries
+
+This design is appropriate for a single-document corpus up to ~1,000 pages and a grid of ≤50 experiment cells. Beyond those boundaries: OpenAI embedding costs grow linearly with corpus size (at 10M tokens, `text-embedding-3-large` runs ~$1.30 per full re-embed); the in-process ChromaDB index must fit in local RAM; the 25-question QA set per config is sufficient to rank relative order but too small (~4 percentage points margin of error) for production precision requirements. Revisit triggers: corpus larger than one PDF, query volume above ~100 unique queries per config, or reproducibility requirements that cannot tolerate remote API variability.
