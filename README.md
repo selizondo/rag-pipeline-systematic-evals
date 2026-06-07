@@ -6,6 +6,15 @@ The community reference config for RAG is fixed-size chunking at 256 tokens with
 
 **Stack:** Python · FAISS · OpenAI embeddings · rank-bm25 · GPT-4o-mini · rag-common
 
+## Related Projects
+
+1. [rag-pipeline-experimentation](https://github.com/selizondo/rag-pipeline-experimentation) — real benchmark qrels, 100 arXiv papers, multi-paper evaluation
+2. [rag-common](https://github.com/selizondo/rag-common) — shared chunkers, retrievers, metrics
+
+*Companion post: [Systematic RAG Evaluation: What Actually Matters When You Measure It](docs/blog_post.md) — grid search methodology*
+
+---
+
 ## Results
 
 4 chunking x 2 embedding x 3 retrieval = 24 experiments, FY2010 federal budget PDF, 25 queries per config:
@@ -37,11 +46,6 @@ Rank-based fusion (RRF) would eliminate this by discarding raw scores entirely, 
 ### Per-config QA prevents the most common eval mistake
 
 The naive approach is one QA dataset evaluated against all 24 configs. This is wrong: QA is generated from specific chunk UUIDs, and a different chunking config produces different UUIDs. The config whose chunk boundaries matched the QA generation run would score artificially higher. Per-config QA means each config is evaluated against ground truth anchored to its own chunk boundaries.
-
-**Companion post:** [Systematic RAG Evaluation: What Actually Matters When You Measure It](docs/blog_post.md)
-**Related projects:** [rag-pipeline-experimentation](https://github.com/selizondo/rag-pipeline-experimentation) (real benchmark qrels, 100 arXiv papers, multi-paper evaluation) · [rag-common](https://github.com/selizondo/rag-common) (shared chunkers, retrievers, metrics)
-
----
 
 ## Go Deeper
 

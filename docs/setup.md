@@ -1,5 +1,19 @@
 # Setup and Usage
 
+## Key Concepts
+
+**24-cell factorial grid:** 4 chunking × 2 embedding × 3 retrieval = 24 experiment cells. All run on the same document (FY2010 federal budget PDF). Grid search reveals relative ranking of configs, which transfers across document types.
+
+**Per-config QA:** Each chunking config produces different chunk UUIDs. Naive approach: one QA dataset for all configs. Wrong: the config whose chunk boundaries matched QA generation scores artificially higher. Solution: generate and evaluate QA per config, anchored to its own chunk boundaries.
+
+**Community config ranked 11th:** `fixed_256 + dense` is the starting point in tutorials. On this document, it ranked 11th of 24. Reason: 256-character chunking cuts mid-sentence on dense financial text, degrading embeddings. Semantic chunking preserves sentence-complete thoughts. Document-dependent: does not mean semantic always wins, means measure on your corpus.
+
+**Hybrid contaminates the pool:** All 8 hybrid configs at alpha=0.5 underperformed pure-vector counterparts (16% gap). Root cause: budget document's intro concentrates technical terms (BM25 score 8-14x higher than next). After min-max norm, that chunk locks at 1.0, compressing all others. Alpha becomes meaningless. Production fix: rank-based fusion (RRF), outlier-resistant.
+
+**9 visualization charts:** MRR heatmap, leaderboard, chunking/embedding/retrieval comparisons, Recall@K curves, scatter, correlation matrix, response time vs quality. Charts enable discovery of patterns (e.g., "embedding size matters more than chunking on this corpus").
+
+---
+
 ## Prerequisites
 
 - Python 3.11+
